@@ -37,32 +37,24 @@ if __name__ == "__main__":
 
     AUTHOR2LABEL = create_author_label(DATA)
 
-    data = prepare_ap_data(path=CONFIG.raw_data_dir, author2irony=AUTHOR2LABEL)
-    print(data[0])
+    DATA = prepare_ap_data(path=CONFIG.raw_data_dir, author2irony=AUTHOR2LABEL)
 
+    TRAIN_DATA, TEST_DATA = train_test_split(DATA,
+                                             test_size=0.3, random_state=1234)
+    VAL_DATA, TEST_DATA = train_test_split(TEST_DATA,
+                                           test_size=0.5, random_state=1234)
 
+    logging.debug("We have {} authors in train data.".format(len(TRAIN_DATA)))
+    logging.debug("We have {} authors in validation data.".format(len(VAL_DATA)))
+    logging.debug("We have {} authors in test data.".format(len(TEST_DATA)))
 
+    n_irony_author = 0
+    n_not_irony_author = 0
+    for data in TRAIN_DATA:
+        if data[1] == "I":
+            n_irony_author += 1
+        else:
+            n_not_irony_author += 1
 
-
-    # FIRST_AUTHORS_TEXTS, SECOND_AUTHORS_TEXTS, TARGETS = prepare_av_data(
-    #     pair_data_path=os.path.join(CONFIG.raw_data_dir, CONFIG.pair_data),
-    #     truth_data_path=os.path.join(CONFIG.raw_data_dir, CONFIG.truth_data))
-    #
-    # assert len(FIRST_AUTHORS_TEXTS) == len(SECOND_AUTHORS_TEXTS) == len(TARGETS)
-    #
-    # logging.debug("We have {} samples.".format(len(FIRST_AUTHORS_TEXTS)))
-    #
-    # TRAIN_FIRST_AUTHORS, TEST_FIRST_AUTHORS, TRAIN_SECOND_AUTHORS, TEST_SECOND_AUTHORS, \
-    # TRAIN_TARGETS, TEST_TARGETS = train_test_split(FIRST_AUTHORS_TEXTS,
-    #                                                SECOND_AUTHORS_TEXTS, TARGETS,
-    #                                                test_size=0.3, random_state=1234)
-    #
-    # VAL_FIRST_AUTHORS, TEST_FIRST_AUTHORS, VAL_SECOND_AUTHORS, TEST_SECOND_AUTHORS, \
-    # VAL_TARGETS, TEST_TARGETS = train_test_split(TEST_FIRST_AUTHORS,
-    #                                              TEST_SECOND_AUTHORS, TEST_TARGETS,
-    #                                              test_size=0.5, random_state=1234)
-    #
-    # logging.debug("We have {} train samples.".format(len(TRAIN_FIRST_AUTHORS)))
-    # logging.debug("We have {} validation samples.".format(len(VAL_FIRST_AUTHORS)))
-    # logging.debug("We have {} test samples.".format(len(TEST_FIRST_AUTHORS)))
-
+    logging.debug("We have {} irony authors and {} not irony  authors in TRAIN_DATA.".format(
+        n_irony_author, n_not_irony_author))
