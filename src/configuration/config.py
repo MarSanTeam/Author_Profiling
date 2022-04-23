@@ -44,13 +44,6 @@ class BaseConfig:
                                  default=Path(__file__).parents[2].__str__()
                                          + "/assets/pretrained_models/xlm_roberta_large")
 
-        self.parser.add_argument("--bpemb_model_path", type=str,
-                                 default=Path(__file__).parents[2].__str__()
-                                         + "/assets/pretrained_models/bpemb/dutch/nl.wiki.bpe.vs200000.model")
-        self.parser.add_argument("--bpemb_vocab_path", type=str,
-                                 default=Path(__file__).parents[2].__str__()
-                                         + "/assets/pretrained_models/bpemb/dutch/nl.wiki.bpe.vs200000.d300.w2v.bin")
-
         self.parser.add_argument("--csv_logger_path", type=str,
                                  default=Path(__file__).parents[2].__str__() + "/assets")
 
