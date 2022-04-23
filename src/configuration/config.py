@@ -38,8 +38,8 @@ class BaseConfig:
                                  default="/home/maryam.najafi/LanguageModels/mt5_en_large/",
                                  help="Path of the multilingual lm model dir")
         self.parser.add_argument("--language_model_tokenizer_path", type=str,
-                                 default=Path(__file__).parents[2].__str__()
-                                         + "/assets/pretrained_models/mt5_tokenizer")
+                                 default=Path(__file__).parents[3].__str__()
+                                         + "/LanguageModels/bert-large-cased/tokenizer")
         self.parser.add_argument("--roberta_model_path", type=str,
                                  default=Path(__file__).parents[2].__str__()
                                          + "/assets/pretrained_models/xlm_roberta_large")
@@ -49,11 +49,11 @@ class BaseConfig:
 
         self.parser.add_argument("--truth_data", type=str, default="truth.txt")
 
-        self.parser.add_argument("--train_data", type=str, default="train_data.pkl")
-        self.parser.add_argument("--test_data", type=str, default="test_data.pkl")
-        self.parser.add_argument("--val_data", type=str, default="val_data.pkl")
+        self.parser.add_argument("--train_data", type=str, default="train_data.csv")
+        self.parser.add_argument("--test_data", type=str, default="test_data.csv")
+        self.parser.add_argument("--val_data", type=str, default="val_data.csv")
 
-        self.parser.add_argument("--data_headers", type=list, default=["text", "label"])
+        self.parser.add_argument("--data_headers", type=list, default=["tweets", "labels"])
         self.parser.add_argument("--customized_headers", type=list, default=["text", "label"])
 
         self.parser.add_argument("--save_top_k", type=int, default=1, help="...")
