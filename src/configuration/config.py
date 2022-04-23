@@ -20,7 +20,7 @@ class BaseConfig:
 
     def __init__(self):
         self.parser = argparse.ArgumentParser()
-        self.parser.add_argument("--model_name", type=str, default="Q_dec")
+        self.parser.add_argument("--model_name", type=str, default="BERT_Large")
 
         self.parser.add_argument("--raw_data_dir", type=str,
                                  default=Path(__file__).parents[2].__str__() + "/data/Raw/en")
@@ -60,6 +60,10 @@ class BaseConfig:
 
         self.parser.add_argument("--num_workers", type=int,
                                  default=10,
+                                 help="...")
+
+        self.parser.add_argument("--max_len", type=int,
+                                 default=150,
                                  help="...")
 
         self.parser.add_argument("--n_epochs", type=int,
