@@ -54,7 +54,7 @@ class BaseConfig:
         self.parser.add_argument("--val_data", type=str, default="val_tweet_level.csv")
 
         self.parser.add_argument("--data_headers", type=list, default=["tweets", "labels"])
-        self.parser.add_argument("--customized_headers", type=list, default=["text", "label"])
+        self.parser.add_argument("--customized_headers", type=list, default=["texts", "targets"])
 
         self.parser.add_argument("--save_top_k", type=int, default=1, help="...")
 
