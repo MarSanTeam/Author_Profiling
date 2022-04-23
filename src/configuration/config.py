@@ -26,7 +26,7 @@ class BaseConfig:
                                  default=Path(__file__).parents[2].__str__() + "/data/Raw/en")
 
         self.parser.add_argument("--processed_data_dir", type=str,
-                                 default=Path(__file__).parents[2].__str__() + "/data/Q_dec")
+                                 default=Path(__file__).parents[2].__str__() + "/data/Processed")
 
         self.parser.add_argument("--assets_dir", type=str,
                                  default=Path(__file__).parents[2].__str__() + "/assets/")
@@ -56,9 +56,9 @@ class BaseConfig:
 
         self.parser.add_argument("--truth_data", type=str, default="truth.txt")
 
-        self.parser.add_argument("--train_data", type=str, default="train.txt")
-        self.parser.add_argument("--test_data", type=str, default="test.txt")
-        self.parser.add_argument("--dev_data", type=str, default="val.txt")
+        self.parser.add_argument("--train_data", type=str, default="train_data.pkl")
+        self.parser.add_argument("--test_data", type=str, default="test_data.pkl")
+        self.parser.add_argument("--val_data", type=str, default="val_data.pkl")
 
         self.parser.add_argument("--data_headers", type=list, default=["text", "label"])
         self.parser.add_argument("--customized_headers", type=list, default=["text", "label"])
