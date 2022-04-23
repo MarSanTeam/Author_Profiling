@@ -49,9 +49,9 @@ class BaseConfig:
 
         self.parser.add_argument("--truth_data", type=str, default="truth.txt")
 
-        self.parser.add_argument("--train_data", type=str, default="train_data.csv")
-        self.parser.add_argument("--test_data", type=str, default="test_data.csv")
-        self.parser.add_argument("--val_data", type=str, default="val_data.csv")
+        self.parser.add_argument("--train_data", type=str, default="train_tweet_level.csv")
+        self.parser.add_argument("--test_data", type=str, default="test_tweet_level.csv")
+        self.parser.add_argument("--val_data", type=str, default="val_tweet_level.csv")
 
         self.parser.add_argument("--data_headers", type=list, default=["tweets", "labels"])
         self.parser.add_argument("--customized_headers", type=list, default=["text", "label"])
