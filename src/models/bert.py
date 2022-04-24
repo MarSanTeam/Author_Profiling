@@ -56,6 +56,10 @@ class Classifier(pl.LightningModule):
         metric2value = {"train_loss": loss,
                         "train_acc":
                             self.accuracy(torch.softmax(outputs, dim=1), label),
+                        "train_f1_first_class":
+                            self.f_score(torch.softmax(outputs, dim=1), label)[0],
+                        "train_f1_second_class":
+                            self.f_score(torch.softmax(outputs, dim=1), label)[1],
                         "train_f_score":
                             self.f_score(torch.softmax(outputs, dim=1), label)}
 
@@ -76,6 +80,10 @@ class Classifier(pl.LightningModule):
         metric2value = {"val_loss": loss,
                         "val_acc":
                             self.accuracy(torch.softmax(outputs, dim=1), label),
+                        "val_f1_first_class":
+                            self.f_score(torch.softmax(outputs, dim=1), label)[0],
+                        "val_f1_second_class":
+                            self.f_score(torch.softmax(outputs, dim=1), label)[1],
                         "val_f1_score":
                             self.f_score(torch.softmax(outputs, dim=1), label)}
 
@@ -96,6 +104,10 @@ class Classifier(pl.LightningModule):
         metric2value = {"test_loss": loss,
                         "test_acc":
                             self.accuracy(torch.softmax(outputs, dim=1), label),
+                        "val_f1_first_class":
+                            self.f_score(torch.softmax(outputs, dim=1), label)[0],
+                        "val_f1_second_class":
+                            self.f_score(torch.softmax(outputs, dim=1), label)[1],
                         "test_f1_score":
                             self.f_score(torch.softmax(outputs, dim=1), label)}
 
