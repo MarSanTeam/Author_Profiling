@@ -63,7 +63,7 @@ class BaseConfig:
                                  help="...")
 
         self.parser.add_argument("--max_len", type=int,
-                                 default=150,
+                                 default=100,
                                  help="...")
 
         self.parser.add_argument("--n_epochs", type=int,
@@ -71,7 +71,7 @@ class BaseConfig:
                                  help="...")
 
         self.parser.add_argument("--batch_size", type=int,
-                                 default=68,
+                                 default=64,
                                  help="...")
 
         self.parser.add_argument("--lr", default=2e-5,
