@@ -13,15 +13,19 @@ import logging
 import pandas as pd
 from sklearn.model_selection import train_test_split
 import torch
+import pytorch_lightning as pl
+
 from pytorch_lightning.loggers import CSVLogger
 from transformers import T5Tokenizer, BertTokenizer
 from pytorch_lightning.callbacks import ModelCheckpoint
+from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 
 from configuration import BaseConfig
 from data_prepration import create_author_label, prepare_ap_data
 from data_loader import read_text, read_pickle, read_csv
 from indexer import Indexer
 from dataset import DataModule
+from models.bert import Classifier
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -89,6 +93,17 @@ if __name__ == "__main__":
                                           filename="QTag-{epoch:02d}-{val_loss:.2f}",
                                           save_top_k=CONFIG.save_top_k,
                                           mode="min")
+
+    EARLY_STOPPING_CALLBACK = EarlyStopping(monitor="val_loss", patience=5)
+
+    # Instantiate the Model Trainer
+    TRAINER = pl.Trainer(max_epochs=CONFIG.n_epochs, gpus=[0],
+                         callbacks=[CHECKPOINT_CALLBACK, EARLY_STOPPING_CALLBACK],
+                         progress_bar_refresh_rate=60, logger=LOGGER)
+
+    MODEL = Classifier(num_classes=len(set(list(TRAIN_DATA.targets))),
+                       lm_path=CONFIG.language_model_path,
+                       lr=CONFIG.lr, max_len=CONFIG.max_len)
 
     # a = []
     # for author in TRAIN_DATA:

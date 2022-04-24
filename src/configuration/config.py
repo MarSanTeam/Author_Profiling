@@ -35,11 +35,11 @@ class BaseConfig:
                                  default=Path(__file__).parents[2].__str__() + "/assets/saved_models/"),
 
         self.parser.add_argument("--language_model_path", type=str,
-                                 default="/home/maryam.najafi/LanguageModels/mt5_en_large/",
+                                 default="/home/ehsan.tavan/LanguageModels/bert_large",
                                  help="Path of the multilingual lm model dir")
         self.parser.add_argument("--language_model_tokenizer_path", type=str,
                                  default=Path(__file__).parents[3].__str__()
-                                         + "/LanguageModels/bert-large-cased/tokenizer")
+                                         + "/LanguageModels/bert_large")
         self.parser.add_argument("--roberta_model_path", type=str,
                                  default=Path(__file__).parents[2].__str__()
                                          + "/assets/pretrained_models/xlm_roberta_large")
