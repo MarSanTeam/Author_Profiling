@@ -35,11 +35,11 @@ class BaseConfig:
                                  default=Path(__file__).parents[2].__str__() + "/assets/saved_models/"),
 
         self.parser.add_argument("--language_model_path", type=str,
-                                 default="/home/ehsan.tavan/LanguageModels/bert_large",
+                                 default="/home/ehsan.tavan/LanguageModels/bert_large_uncased",
                                  help="Path of the multilingual lm model dir")
         self.parser.add_argument("--language_model_tokenizer_path", type=str,
                                  default=Path(__file__).parents[3].__str__()
-                                         + "/LanguageModels/bert_large")
+                                         + "/LanguageModels/bert_large_uncased")
         self.parser.add_argument("--roberta_model_path", type=str,
                                  default=Path(__file__).parents[2].__str__()
                                          + "/assets/pretrained_models/xlm_roberta_large")
@@ -71,7 +71,7 @@ class BaseConfig:
                                  help="...")
 
         self.parser.add_argument("--batch_size", type=int,
-                                 default=32,
+                                 default=68,
                                  help="...")
 
         self.parser.add_argument("--lr", default=2e-5,

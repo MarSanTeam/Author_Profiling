@@ -34,6 +34,7 @@ class CustomDataset(ABC, torch.utils.data.Dataset):
     def __len__(self):
         return len(self.texts)
 
+    @abstractmethod
     def __getitem__(self, item_index):
         """
 
@@ -55,6 +56,24 @@ class CustomDataset(ABC, torch.utils.data.Dataset):
                                            truncation=True,
                                            return_token_type_ids=True)
         return batch
+
+
+class LMDataset(CustomDataset):
+    """
+        SeparateDataset
+    """
+
+    def __init__(self, data: dict, tokenizer, max_len: int):
+        super().__init__(data, tokenizer, max_len)
+
+    def __getitem__(self, item_index):
+        texts, target = super(LMDataset, self).__getitem__(item_index)
+        texts = self.single_data_tokenizer(texts)
+
+        texts = texts.input_ids.flatten()
+
+        return {"texts": texts,
+                "targets": torch.tensor(target)}
 
 
 class InferenceDataset(CustomDataset):
@@ -89,15 +108,15 @@ class DataModule(pl.LightningDataModule):
         self.customs_dataset = {}
 
     def setup(self):
-        self.customs_dataset["train_dataset"] = CustomDataset(
+        self.customs_dataset["train_dataset"] = LMDataset(
             data=self.data["train_data"], tokenizer=self.tokenizer, max_len=self.config.max_len
         )
 
-        self.customs_dataset["val_dataset"] = CustomDataset(
+        self.customs_dataset["val_dataset"] = LMDataset(
             data=self.data["val_data"], tokenizer=self.tokenizer, max_len=self.config.max_len
         )
 
-        self.customs_dataset["test_dataset"] = CustomDataset(
+        self.customs_dataset["test_dataset"] = LMDataset(
             data=self.data["test_data"], tokenizer=self.tokenizer, max_len=self.config.max_len
         )
 

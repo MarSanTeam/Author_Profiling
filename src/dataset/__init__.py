@@ -1,1 +1,1 @@
-from .dataset import DataModule, InferenceDataset
+from .dataset import DataModule, InferenceDataset, LMDataset

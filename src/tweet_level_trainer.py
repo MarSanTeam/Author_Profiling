@@ -97,13 +97,17 @@ if __name__ == "__main__":
     EARLY_STOPPING_CALLBACK = EarlyStopping(monitor="val_loss", patience=5)
 
     # Instantiate the Model Trainer
-    TRAINER = pl.Trainer(max_epochs=CONFIG.n_epochs, gpus=[0],
+    TRAINER = pl.Trainer(max_epochs=CONFIG.n_epochs, gpus=[1],
                          callbacks=[CHECKPOINT_CALLBACK, EARLY_STOPPING_CALLBACK],
                          progress_bar_refresh_rate=60, logger=LOGGER)
 
     MODEL = Classifier(num_classes=len(set(list(TRAIN_DATA.targets))),
                        lm_path=CONFIG.language_model_path,
                        lr=CONFIG.lr, max_len=CONFIG.max_len)
+
+    # Train and Test Model
+    TRAINER.fit(MODEL, datamodule=DATA_MODULE)
+    TRAINER.test(ckpt_path="best", datamodule=DATA_MODULE)
 
     # a = []
     # for author in TRAIN_DATA:
