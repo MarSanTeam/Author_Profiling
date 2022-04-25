@@ -39,6 +39,7 @@ class Classifier(pl.LightningModule):
     def forward(self, batch):
         inputs_ids = batch["texts"]
         output_encoder = self.model(inputs_ids).pooler_output
+        output_encoder = torch.nn.Dropout(0.2)(output_encoder)
         final_output = self.classifier(output_encoder)
         return final_output
 
@@ -104,9 +105,9 @@ class Classifier(pl.LightningModule):
         metric2value = {"test_loss": loss,
                         "test_acc":
                             self.accuracy(torch.softmax(outputs, dim=1), label),
-                        "val_f1_first_class":
+                        "test_f1_first_class":
                             self.f_score(torch.softmax(outputs, dim=1), label)[0],
-                        "val_f1_second_class":
+                        "test_f1_second_class":
                             self.f_score(torch.softmax(outputs, dim=1), label)[1],
                         "test_f1_score":
                             self.f_score(torch.softmax(outputs, dim=1), label)}
