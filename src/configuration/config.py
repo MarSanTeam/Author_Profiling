@@ -42,7 +42,7 @@ class BaseConfig:
                                          + "/LanguageModels/bert_large_uncased")
         self.parser.add_argument("--sentence_transformers_path", type=str,
                                  default=Path(__file__).parents[3].__str__()
-                                         + "/sentence_transformers/stsb-bert-large")
+                                         + "/LanguageModels/sentence_transformers/stsb-bert-large/")
         self.parser.add_argument("--roberta_model_path", type=str,
                                  default=Path(__file__).parents[2].__str__()
                                          + "/assets/pretrained_models/xlm_roberta_large")
