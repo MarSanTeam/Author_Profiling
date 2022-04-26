@@ -32,3 +32,18 @@ def create_user_embedding(data, lm_model, tokenizer) -> [list, list]:
         # print(f"{user_counter} user embedding created")
     return user_embeddings, user_label
 
+
+def create_user_embedding_sbert(data, model) -> [list, list]:
+    """
+
+    :param data:
+    :param model:
+    :return:
+    """
+    user_embeddings, user_label = [], []
+    for author_tweets, author_label in data:
+        embeddings = model.encode(author_tweets)
+        avg_embeddings = np.mean(embeddings, axis=0)
+        user_embeddings.append(avg_embeddings)
+        user_label.append(author_label)
+    return user_embeddings, user_label
