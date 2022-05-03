@@ -17,6 +17,9 @@ from sentence_transformers import SentenceTransformer
 from sklearn.metrics import f1_score
 import logging
 import itertools
+from sklearn.model_selection import ShuffleSplit
+from sklearn.model_selection import cross_val_score
+from sklearn import metrics
 
 from configuration import BaseConfig
 from data_prepration import prepare_ap_data, create_author_label
@@ -38,42 +41,26 @@ if __name__ == "__main__":
     VAL_DATA = read_pickle(os.path.join(CONFIG.processed_data_dir, "val_data.pkl"))
     TEST_DATA = read_pickle(os.path.join(CONFIG.processed_data_dir, "test_data.pkl"))
 
+    DATA = TRAIN_DATA + VAL_DATA + TEST_DATA
+
     logging.debug("We have {} users in our data.".format(len(TRAIN_DATA) +
                                                          len(VAL_DATA) +
                                                          len(TEST_DATA)))
 
-    logging.debug("We have {} users in train data.".format(len(TRAIN_DATA)))
-    logging.debug("We have {} users in validation data.".format(len(VAL_DATA)))
-    logging.debug("We have {} users in test data.".format(len(TEST_DATA)))
-
     # ----------------------- Indexer -----------------------
-    TRAIN_TARGETS = [author_data[1] for author_data in TRAIN_DATA]
-    VAL_TARGETS = [author_data[1] for author_data in VAL_DATA]
-    TEST_TARGETS = [author_data[1] for author_data in TEST_DATA]
+    TARGETS = [author_data[1] for author_data in DATA]
 
-    TARGET_INDEXER = Indexer(vocabs=TRAIN_TARGETS)
+    TARGET_INDEXER = Indexer(vocabs=TARGETS)
     TARGET_INDEXER.build_vocab2idx()
     TARGET_INDEXER.save(path=CONFIG.assets_dir)
 
     logging.debug("Create Indexer")
 
-    TRAIN_TARGETS_CONVENTIONAL = [[target] for target in TRAIN_TARGETS]
-    TRAIN_INDEXED_TARGET = TARGET_INDEXER.convert_samples_to_indexes(TRAIN_TARGETS_CONVENTIONAL)
-    TRAIN_INDEXED_TARGET = list(itertools.chain(*TRAIN_INDEXED_TARGET))
+    TARGETS_CONVENTIONAL = [[target] for target in TARGETS]
+    INDEXED_TARGET = TARGET_INDEXER.convert_samples_to_indexes(TARGETS_CONVENTIONAL)
+    INDEXED_TARGET = list(itertools.chain(*TARGETS_CONVENTIONAL))
 
-    logging.debug("Create train indexed target")
-
-    VAL_TARGETS_CONVENTIONAL = [[target] for target in VAL_TARGETS]
-    VAL_INDEXED_TARGET = TARGET_INDEXER.convert_samples_to_indexes(VAL_TARGETS_CONVENTIONAL)
-    VAL_INDEXED_TARGET = list(itertools.chain(*VAL_INDEXED_TARGET))
-
-    logging.debug("Create validation indexed target")
-
-    TEST_TARGETS_CONVENTIONAL = [[target] for target in TEST_TARGETS]
-    TEST_INDEXED_TARGET = TARGET_INDEXER.convert_samples_to_indexes(TEST_TARGETS_CONVENTIONAL)
-    TEST_INDEXED_TARGET = list(itertools.chain(*TEST_INDEXED_TARGET))
-
-    logging.debug("Create test indexed target")
+    logging.debug("Create indexed target")
 
     # create LM Tokenizer instance
     # TOKENIZER = BertTokenizer.from_pretrained(CONFIG.language_model_tokenizer_path)
@@ -86,47 +73,36 @@ if __name__ == "__main__":
 
     IRONY_TOKENIZER = AutoTokenizer.from_pretrained(CONFIG.roberta_base_irony_model_path)
 
-    TRAIN_USER_EMBEDDINGS, TRAIN_USER_LABEL = create_user_embedding_sbert(TRAIN_DATA, MODEL)  # , TOKENIZER)
-    logging.debug("Create train user embeddings")
+    USER_EMBEDDINGS, USER_LABEL = create_user_embedding_sbert(DATA, MODEL)  # , TOKENIZER)
+    logging.debug("Create user embeddings")
 
-    VAL_USER_EMBEDDINGS, VAL_USER_LABEL = create_user_embedding_sbert(VAL_DATA, MODEL)  # , TOKENIZER)
+    USER_EMBEDDINGS_IRONY, _ = create_user_embedding_irony(DATA, IRONY_MODEL, IRONY_TOKENIZER)
 
-    logging.debug("Create validation user embeddings")
-
-    TEST_USER_EMBEDDINGS, TEST_USER_LABEL = create_user_embedding_sbert(TEST_DATA, MODEL)  # , TOKENIZER)
-
-    TRAIN_USER_EMBEDDINGS_IRONY, _ = create_user_embedding_irony(TRAIN_DATA, IRONY_MODEL, IRONY_TOKENIZER)
-    VAL_USER_EMBEDDINGS_IRONY, _ = create_user_embedding_irony(VAL_DATA, IRONY_MODEL, IRONY_TOKENIZER)
-    TEST_USER_EMBEDDINGS_IRONY, _ = create_user_embedding_irony(TEST_DATA, IRONY_MODEL, IRONY_TOKENIZER)
-
-    logging.debug("Create test user embeddings")
+    logging.debug("Create irony user embeddings")
 
     # ----------------------------- Train SVM -----------------------------
-    FEATURES = list(np.concatenate([TRAIN_USER_EMBEDDINGS, TRAIN_USER_EMBEDDINGS_IRONY], axis=1))
+    FEATURES = list(np.concatenate([USER_EMBEDDINGS, USER_EMBEDDINGS_IRONY], axis=1))
 
     CLF = svm.SVC()
-    CLF.fit(FEATURES, TRAIN_INDEXED_TARGET)
+    # CLF.fit(FEATURES, INDEXED_TARGET)
 
-    TRAIN_PREDICTED_TARGETS = CLF.predict(FEATURES)
+    SCORES = cross_val_score(CLF, FEATURES, INDEXED_TARGET, cv=5)
+    print(SCORES)
 
-    VAL_FEATURES = list(np.concatenate([VAL_USER_EMBEDDINGS, VAL_USER_EMBEDDINGS_IRONY], axis=1))
-    VAL_PREDICTED_TARGETS = CLF.predict(VAL_FEATURES)
-
-    TEST_FEATURES = list(np.concatenate([TEST_USER_EMBEDDINGS, TEST_USER_EMBEDDINGS_IRONY], axis=1))
-    TEST_PREDICTED_TARGETS = CLF.predict(TEST_FEATURES)
-
-    TRAIN_F1SCORE_MACRO = f1_score(TRAIN_INDEXED_TARGET, TRAIN_PREDICTED_TARGETS, average="macro")
-    VAL_F1SCORE_MACRO = f1_score(VAL_INDEXED_TARGET, VAL_PREDICTED_TARGETS, average="macro")
-    TEST_F1SCORE_MACRO = f1_score(TEST_INDEXED_TARGET, TEST_PREDICTED_TARGETS, average="macro")
-
-    logging.debug(f"Train macro F1 score is : {TRAIN_F1SCORE_MACRO * 100:0.2f}")
-    logging.debug(f"Val macro F1 score is : {VAL_F1SCORE_MACRO * 100:0.2f}")
-    logging.debug(f"Test macro F1 score is : {TEST_F1SCORE_MACRO * 100:0.2f}")
-
-    TRAIN_F1SCORE_MICRO = f1_score(TRAIN_INDEXED_TARGET, TRAIN_PREDICTED_TARGETS, average="micro")
-    VAL_F1SCORE_MICRO = f1_score(VAL_INDEXED_TARGET, VAL_PREDICTED_TARGETS, average="micro")
-    TEST_F1SCORE_MICRO = f1_score(TEST_INDEXED_TARGET, TEST_PREDICTED_TARGETS, average="micro")
-
-    logging.debug(f"Train micro F1 score is : {TRAIN_F1SCORE_MICRO * 100:0.2f}")
-    logging.debug(f"Val micro F1 score is : {VAL_F1SCORE_MICRO * 100:0.2f}")
-    logging.debug(f"Test micro F1 score is : {TEST_F1SCORE_MICRO * 100:0.2f}")
+    print("%0.2f accuracy with a standard "
+          "deviation of %0.2f" % (SCORES.mean(), SCORES.std()))
+    # TRAIN_F1SCORE_MACRO = f1_score(TRAIN_INDEXED_TARGET, TRAIN_PREDICTED_TARGETS, average="macro")
+    # VAL_F1SCORE_MACRO = f1_score(VAL_INDEXED_TARGET, VAL_PREDICTED_TARGETS, average="macro")
+    # TEST_F1SCORE_MACRO = f1_score(TEST_INDEXED_TARGET, TEST_PREDICTED_TARGETS, average="macro")
+    #
+    # logging.debug(f"Train macro F1 score is : {TRAIN_F1SCORE_MACRO * 100:0.2f}")
+    # logging.debug(f"Val macro F1 score is : {VAL_F1SCORE_MACRO * 100:0.2f}")
+    # logging.debug(f"Test macro F1 score is : {TEST_F1SCORE_MACRO * 100:0.2f}")
+    #
+    # TRAIN_F1SCORE_MICRO = f1_score(TRAIN_INDEXED_TARGET, TRAIN_PREDICTED_TARGETS, average="micro")
+    # VAL_F1SCORE_MICRO = f1_score(VAL_INDEXED_TARGET, VAL_PREDICTED_TARGETS, average="micro")
+    # TEST_F1SCORE_MICRO = f1_score(TEST_INDEXED_TARGET, TEST_PREDICTED_TARGETS, average="micro")
+    #
+    # logging.debug(f"Train micro F1 score is : {TRAIN_F1SCORE_MICRO * 100:0.2f}")
+    # logging.debug(f"Val micro F1 score is : {VAL_F1SCORE_MICRO * 100:0.2f}")
+    # logging.debug(f"Test micro F1 score is : {TEST_F1SCORE_MICRO * 100:0.2f}")
