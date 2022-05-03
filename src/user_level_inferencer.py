@@ -12,6 +12,7 @@ import os
 from sklearn import svm
 import numpy as np
 from transformers import BertModel, BertTokenizer
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics import f1_score
 import logging
@@ -20,7 +21,8 @@ import itertools
 from configuration import BaseConfig
 from data_prepration import prepare_ap_data, create_author_label
 from data_loader import read_text, read_pickle
-from utils import create_user_embedding, create_user_embedding_sbert
+from utils import create_user_embedding, create_user_embedding_sbert,\
+    create_user_embedding_irony
 from indexer import Indexer
 
 logging.basicConfig(level=logging.DEBUG)
@@ -79,23 +81,39 @@ if __name__ == "__main__":
     # MODEL.eval()
 
     MODEL = SentenceTransformer(CONFIG.sentence_transformers_path, device="cuda:0")
+    IRONY_MODEL = AutoModelForSequenceClassification.from_pretrained(
+        CONFIG.roberta_base_irony_model_path)
+
+    IRONY_TOKENIZER = AutoTokenizer.from_pretrained(CONFIG.roberta_base_irony_model_path)
 
     TRAIN_USER_EMBEDDINGS, TRAIN_USER_LABEL = create_user_embedding_sbert(TRAIN_DATA, MODEL)  # , TOKENIZER)
     logging.debug("Create train user embeddings")
 
     VAL_USER_EMBEDDINGS, VAL_USER_LABEL = create_user_embedding_sbert(VAL_DATA, MODEL)  # , TOKENIZER)
+
     logging.debug("Create validation user embeddings")
 
     TEST_USER_EMBEDDINGS, TEST_USER_LABEL = create_user_embedding_sbert(TEST_DATA, MODEL)  # , TOKENIZER)
+
+    TRAIN_USER_EMBEDDINGS_IRONY, _ = create_user_embedding_irony(TRAIN_DATA, IRONY_MODEL, IRONY_TOKENIZER)
+    VAL_USER_EMBEDDINGS_IRONY, _ = create_user_embedding_irony(VAL_DATA, IRONY_MODEL, IRONY_TOKENIZER)
+    TEST_USER_EMBEDDINGS_IRONY, _ = create_user_embedding_irony(TEST_DATA, IRONY_MODEL, IRONY_TOKENIZER)
+
     logging.debug("Create test user embeddings")
 
     # ----------------------------- Train SVM -----------------------------
-    CLF = svm.SVC()
-    CLF.fit(TRAIN_USER_EMBEDDINGS, TRAIN_INDEXED_TARGET)
+    FEATURES = list(np.concatenate([TRAIN_USER_EMBEDDINGS, TRAIN_USER_EMBEDDINGS_IRONY], axis=1))
 
-    TRAIN_PREDICTED_TARGETS = CLF.predict(TRAIN_USER_EMBEDDINGS)
-    VAL_PREDICTED_TARGETS = CLF.predict(VAL_USER_EMBEDDINGS)
-    TEST_PREDICTED_TARGETS = CLF.predict(TEST_USER_EMBEDDINGS)
+    CLF = svm.SVC()
+    CLF.fit(FEATURES, TRAIN_INDEXED_TARGET)
+
+    TRAIN_PREDICTED_TARGETS = CLF.predict(FEATURES)
+
+    VAL_FEATURES = list(np.concatenate([VAL_USER_EMBEDDINGS, VAL_USER_EMBEDDINGS_IRONY], axis=1))
+    VAL_PREDICTED_TARGETS = CLF.predict(VAL_FEATURES)
+
+    TEST_FEATURES = list(np.concatenate([TEST_USER_EMBEDDINGS, TEST_USER_EMBEDDINGS_IRONY], axis=1))
+    TEST_PREDICTED_TARGETS = CLF.predict(TEST_FEATURES)
 
     TRAIN_F1SCORE_MACRO = f1_score(TRAIN_INDEXED_TARGET, TRAIN_PREDICTED_TARGETS, average="macro")
     VAL_F1SCORE_MACRO = f1_score(VAL_INDEXED_TARGET, VAL_PREDICTED_TARGETS, average="macro")
