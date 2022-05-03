@@ -58,7 +58,7 @@ if __name__ == "__main__":
 
     TARGETS_CONVENTIONAL = [[target] for target in TARGETS]
     INDEXED_TARGET = TARGET_INDEXER.convert_samples_to_indexes(TARGETS_CONVENTIONAL)
-    INDEXED_TARGET = list(itertools.chain(*TARGETS_CONVENTIONAL))
+    INDEXED_TARGET = list(itertools.chain(*INDEXED_TARGET))
 
     logging.debug("Create indexed target")
 
