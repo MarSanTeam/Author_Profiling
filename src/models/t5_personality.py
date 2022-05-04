@@ -40,22 +40,22 @@ class Classifier(pl.LightningModule):
     def forward(self, batch):
         inputs_ids = batch["input_ids"]
         # inputs_ids.size() = [batch_size, sen_len]
-        output_encoder = self.model(inputs_ids).last_hidden_state.permute(0, 2, 1)
+        inputs_ids = self.model(inputs_ids).last_hidden_state.permute(0, 2, 1)
         # output_encoder.size() = [batch_size, hidden_size, sen_len]
 
-        maxed_pool = self.max_pool(output_encoder).squeeze(2)
+        inputs_ids = self.max_pool(inputs_ids).squeeze(2)
         # maxed_pool.size() = [batch_size, hidden_size]
 
-        dense = self.dense(maxed_pool)
+        inputs_ids = self.dense(inputs_ids)
         # dense.size() = [batch_size, hidden_size]
 
-        final_output_1 = self.classifier(dense)
+        final_output_1 = self.classifier(inputs_ids)
         # final_output_1.size() = [batch_size, num_class]
 
-        final_output_2 = self.classifier(dense)
-        final_output_3 = self.classifier(dense)
-        final_output_4 = self.classifier(dense)
-        return final_output_1, final_output_2, final_output_3, final_output_4, dense
+        final_output_2 = self.classifier(inputs_ids)
+        final_output_3 = self.classifier(inputs_ids)
+        final_output_4 = self.classifier(inputs_ids)
+        return final_output_1, final_output_2, final_output_3, final_output_4, inputs_ids
 
     def training_step(self, batch, batch_idx):
         """
