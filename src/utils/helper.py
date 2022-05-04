@@ -62,15 +62,13 @@ def create_user_embedding_irony(data: List[list], model, tokenizer) -> [list, li
     user_embeddings, user_label = [], []
 
     for author_tweets, author_label in data:
-        author_tweets = tokenizer.batch_encode_plus(author_tweets, padding=True).input_ids
-        author_tweets = torch.tensor(author_tweets)
-
-        embeddings = model(author_tweets)
-        # embeddings = embeddings[0].detach().numpy()
-        embeddings = torch.nn.Softmax()(embeddings[0])
-        avg_embeddings = torch.mean(embeddings, dim=0)
-        avg_embeddings = avg_embeddings.detach().tolist()
-
+        scores = []
+        for tweet in author_tweets:
+            tweet = tokenizer(tweet, return_tensors="pt")
+            output = model(**tweet)
+            score = torch.nn.Softmax(dim=1)(output[0])
+            scores.append(score[0].detach().numpy())
+        avg_embeddings = np.mean(scores, axis=0)
         user_embeddings.append(avg_embeddings)
         user_label.append(author_label)
     return user_embeddings, user_label
