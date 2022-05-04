@@ -72,3 +72,29 @@ def create_user_embedding_irony(data: List[list], model, tokenizer) -> [list, li
         user_embeddings.append(avg_embeddings)
         user_label.append(author_label)
     return user_embeddings, user_label
+
+
+def create_user_embedding_personality(data: List[list], model, tokenizer, max_len) -> [list, list]:
+    """
+
+    :param data:
+    :param model:
+    :param tokenizer:
+    :param max_len:
+    :return:
+    """
+    user_embeddings, user_label = [], []
+
+    for author_tweets, author_label in data:
+        author_tweets = tokenizer.batch_encode_plus(author_tweets,
+                                                    max_length=max_len,
+                                                    padding="max_length",
+                                                    truncation=True,
+                                                    return_tensors="pt")
+        # author_tweets = author_tweets.to("cuda:1")
+        output = model(author_tweets)
+        output = torch.mean(output[-1], dim=0)
+        user_embeddings.append(output)
+        user_label.append(author_label)
+
+    return user_embeddings, user_label

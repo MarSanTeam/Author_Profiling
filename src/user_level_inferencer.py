@@ -12,7 +12,7 @@ import os
 from sklearn import svm
 import numpy as np
 from transformers import BertModel, BertTokenizer
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from transformers import AutoModelForSequenceClassification, AutoTokenizer, T5Tokenizer
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics import f1_score
 import logging
@@ -25,8 +25,9 @@ from configuration import BaseConfig
 from data_prepration import prepare_ap_data, create_author_label
 from data_loader import read_text, read_pickle, write_pickle
 from utils import create_user_embedding, create_user_embedding_sbert, \
-    create_user_embedding_irony
+    create_user_embedding_irony, create_user_embedding_personality
 from indexer import Indexer
+from models.t5_personality import Classifier
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -70,8 +71,13 @@ if __name__ == "__main__":
     MODEL = SentenceTransformer(CONFIG.sentence_transformers_path, device="cuda:0")
     IRONY_MODEL = AutoModelForSequenceClassification.from_pretrained(
         CONFIG.roberta_base_irony_model_path)
+    PERSONALITY_MODEL_PATH = "../assets/saved_models/personality/checkpoints/" \
+                             "QTag-epoch=08-val_loss=0.65.ckpt"
+    PERSONALITY_MODEL = Classifier.load_from_checkpoint(PERSONALITY_MODEL_PATH)
+    PERSONALITY_MODEL.eval()
 
     IRONY_TOKENIZER = AutoTokenizer.from_pretrained(CONFIG.roberta_base_irony_model_path)
+    PERSONALITY_TOKENIZER = T5Tokenizer.from_pretrained(CONFIG.language_model_tokenizer_path)
 
     if os.path.exists(CONFIG.sbert_output_file_path):
         USER_EMBEDDINGS, USER_LABEL = read_pickle(CONFIG.sbert_output_file_path)
@@ -81,6 +87,8 @@ if __name__ == "__main__":
 
     logging.debug("Create user embeddings")
 
+    print(CONFIG.roberta_base_irony_model_path)
+
     if os.path.exists(CONFIG.irony_output_file_path):
         USER_EMBEDDINGS_IRONY = read_pickle(CONFIG.irony_output_file_path)
     else:
@@ -89,6 +97,17 @@ if __name__ == "__main__":
 
     logging.debug("Create irony user embeddings")
 
+    if os.path.exists(CONFIG.personality_output_file_path):
+        USER_EMBEDDINGS_PERSONALITY = read_pickle(CONFIG.personality_output_file_path)
+    else:
+        USER_EMBEDDINGS_PERSONALITY, _ = create_user_embedding_personality(DATA,
+                                                                           PERSONALITY_MODEL,
+                                                                           PERSONALITY_TOKENIZER,
+                                                                           CONFIG.max_len)
+        write_pickle(CONFIG.personality_output_file_path, USER_EMBEDDINGS_PERSONALITY)
+
+    logging.debug("Create personality user embeddings")
+
     # ----------------------------- Train SVM -----------------------------
     FEATURES = list(np.concatenate([USER_EMBEDDINGS, USER_EMBEDDINGS_IRONY], axis=1))
 
@@ -96,6 +115,12 @@ if __name__ == "__main__":
     # CLF.fit(FEATURES, INDEXED_TARGET)
 
     SCORES = cross_val_score(CLF, FEATURES, INDEXED_TARGET, cv=5)
+    print(SCORES)
+
+    print("%0.2f accuracy with a standard "
+          "deviation of %0.2f" % (SCORES.mean(), SCORES.std()))
+
+    SCORES = cross_val_score(CLF, USER_EMBEDDINGS_IRONY, INDEXED_TARGET, cv=5)
     print(SCORES)
 
     print("%0.2f accuracy with a standard "

@@ -39,7 +39,7 @@ class BaseConfig:
                                  help="Path of the multilingual lm model dir")
         self.parser.add_argument("--language_model_tokenizer_path", type=str,
                                  default=Path(__file__).parents[3].__str__()
-                                         + "/LanguageModels/bert_large_uncased")
+                                         + "/LanguageModels/t5_en_large")
         self.parser.add_argument("--sentence_transformers_path", type=str,
                                  default=Path(__file__).parents[3].__str__()
                                          + "/LanguageModels/sentence_transformers/stsb-bert-large/")
@@ -53,6 +53,9 @@ class BaseConfig:
         self.parser.add_argument("--irony_output_file_path", type=str,
                                  default=Path(__file__).parents[2].__str__()
                                          + "/assets/irony.pkl")
+        self.parser.add_argument("--personality_output_file_path", type=str,
+                                 default=Path(__file__).parents[2].__str__()
+                                         + "/assets/personality.pkl")
 
         self.parser.add_argument("--csv_logger_path", type=str,
                                  default=Path(__file__).parents[2].__str__() + "/assets")
