@@ -23,8 +23,8 @@ from sklearn import metrics
 
 from configuration import BaseConfig
 from data_prepration import prepare_ap_data, create_author_label
-from data_loader import read_text, read_pickle
-from utils import create_user_embedding, create_user_embedding_sbert,\
+from data_loader import read_text, read_pickle, write_pickle
+from utils import create_user_embedding, create_user_embedding_sbert, \
     create_user_embedding_irony
 from indexer import Indexer
 
@@ -73,10 +73,19 @@ if __name__ == "__main__":
 
     IRONY_TOKENIZER = AutoTokenizer.from_pretrained(CONFIG.roberta_base_irony_model_path)
 
-    USER_EMBEDDINGS, USER_LABEL = create_user_embedding_sbert(DATA, MODEL)  # , TOKENIZER)
+    if os.path.exists(CONFIG.sbert_output_file_path):
+        USER_EMBEDDINGS, USER_LABEL = read_pickle(CONFIG.sbert_output_file_path)
+    else:
+        USER_EMBEDDINGS, USER_LABEL = create_user_embedding_sbert(DATA, MODEL)  # , TOKENIZER)
+        write_pickle(CONFIG.sbert_output_file_path, [USER_EMBEDDINGS, USER_LABEL])
+
     logging.debug("Create user embeddings")
 
-    USER_EMBEDDINGS_IRONY, _ = create_user_embedding_irony(DATA, IRONY_MODEL, IRONY_TOKENIZER)
+    if os.path.exists(CONFIG.irony_output_file_path):
+        USER_EMBEDDINGS_IRONY = read_pickle(CONFIG.irony_output_file_path)
+    else:
+        USER_EMBEDDINGS_IRONY, _ = create_user_embedding_irony(DATA, IRONY_MODEL, IRONY_TOKENIZER)
+        write_pickle(CONFIG.irony_output_file_path, USER_EMBEDDINGS_IRONY)
 
     logging.debug("Create irony user embeddings")
 
