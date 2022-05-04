@@ -46,6 +46,13 @@ class BaseConfig:
         self.parser.add_argument("--roberta_base_irony_model_path", type=str,
                                  default=Path(__file__).parents[3].__str__()
                                          + "/LanguageModels/twitter-roberta-base-irony")
+        self.parser.add_argument("--sbert_output_file_path", type=str,
+                                 default=Path(__file__).parents[2].__str__()
+                                         + "/assets/sbert.pkl")
+
+        self.parser.add_argument("--irony_output_file_path", type=str,
+                                 default=Path(__file__).parents[2].__str__()
+                                         + "/assets/irony.pkl")
 
         self.parser.add_argument("--csv_logger_path", type=str,
                                  default=Path(__file__).parents[2].__str__() + "/assets")
