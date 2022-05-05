@@ -75,8 +75,13 @@ if __name__ == "__main__":
         CONFIG.roberta_base_irony_model_path)
     PERSONALITY_MODEL_PATH = "../assets/saved_models/personality/checkpoints/" \
                              "QTag-epoch=08-val_loss=0.65.ckpt"
+
+    MYIRONY_MODEL_PATH = "../assets/saved_models/irony/checkpoints/" \
+                         "QTag-epoch=10-val_loss=0.45.ckpt"
     PERSONALITY_MODEL = Classifier.load_from_checkpoint(PERSONALITY_MODEL_PATH)
     PERSONALITY_MODEL.eval()
+    MYIRONY_MODEL = Classifier.load_from_checkpoint(PERSONALITY_MODEL_PATH)
+    MYIRONY_MODEL.eval()
 
     IRONY_TOKENIZER = AutoTokenizer.from_pretrained(CONFIG.roberta_base_irony_model_path)
     PERSONALITY_TOKENIZER = T5Tokenizer.from_pretrained(CONFIG.language_model_tokenizer_path)
@@ -110,8 +115,19 @@ if __name__ == "__main__":
 
     logging.debug("Create personality user embeddings")
 
+    if os.path.exists(CONFIG.myirony_output_file_path):
+        USER_EMBEDDINGS_MYIRONY = read_pickle(CONFIG.myirony_output_file_path)
+    else:
+        USER_EMBEDDINGS_MYIRONY, _ = create_user_embedding_personality(DATA,
+                                                                       MYIRONY_MODEL,
+                                                                       PERSONALITY_TOKENIZER,
+                                                                       CONFIG.max_len)
+        write_pickle(CONFIG.myirony_output_file_path, USER_EMBEDDINGS_MYIRONY)
+
+    logging.debug("Create myirony user embeddings")
+
     # ----------------------------- Train SVM -----------------------------
-    FEATURES = list(np.concatenate([USER_EMBEDDINGS_PERSONALITY, USER_EMBEDDINGS], axis=1))
+    FEATURES = list(np.concatenate([USER_EMBEDDINGS_MYIRONY, USER_EMBEDDINGS], axis=1))
 
     CLF = GradientBoostingClassifier()
     # CLF.fit(FEATURES, INDEXED_TARGET)

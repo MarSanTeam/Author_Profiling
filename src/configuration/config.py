@@ -56,6 +56,9 @@ class BaseConfig:
         self.parser.add_argument("--personality_output_file_path", type=str,
                                  default=Path(__file__).parents[2].__str__()
                                          + "/assets/personality.pkl")
+        self.parser.add_argument("--myirony_output_file_path", type=str,
+                                 default=Path(__file__).parents[2].__str__()
+                                         + "/assets/myirony.pkl")
 
         self.parser.add_argument("--csv_logger_path", type=str,
                                  default=Path(__file__).parents[2].__str__() + "/assets")
