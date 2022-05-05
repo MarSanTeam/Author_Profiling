@@ -10,6 +10,8 @@
 
 import os
 from sklearn import svm
+from sklearn.linear_model import SGDClassifier
+from sklearn.ensemble import GradientBoostingClassifier
 import numpy as np
 from transformers import BertModel, BertTokenizer
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, T5Tokenizer
@@ -109,22 +111,17 @@ if __name__ == "__main__":
     logging.debug("Create personality user embeddings")
 
     # ----------------------------- Train SVM -----------------------------
-    FEATURES = list(np.concatenate([USER_EMBEDDINGS, USER_EMBEDDINGS_IRONY], axis=1))
+    FEATURES = list(np.concatenate([USER_EMBEDDINGS_PERSONALITY, USER_EMBEDDINGS], axis=1))
 
-    CLF = svm.SVC()
+    CLF = GradientBoostingClassifier()
     # CLF.fit(FEATURES, INDEXED_TARGET)
 
-    SCORES = cross_val_score(CLF, FEATURES, INDEXED_TARGET, cv=5)
+    SCORES = cross_val_score(CLF, USER_EMBEDDINGS, INDEXED_TARGET, cv=4)
     print(SCORES)
 
-    print("%0.2f accuracy with a standard "
-          "deviation of %0.2f" % (SCORES.mean(), SCORES.std()))
+    print("%0.4f accuracy with a standard "
+          "deviation of %0.4f" % (SCORES.mean(), SCORES.std()))
 
-    SCORES = cross_val_score(CLF, USER_EMBEDDINGS_IRONY, INDEXED_TARGET, cv=5)
-    print(SCORES)
-
-    print("%0.2f accuracy with a standard "
-          "deviation of %0.2f" % (SCORES.mean(), SCORES.std()))
     # TRAIN_F1SCORE_MACRO = f1_score(TRAIN_INDEXED_TARGET, TRAIN_PREDICTED_TARGETS, average="macro")
     # VAL_F1SCORE_MACRO = f1_score(VAL_INDEXED_TARGET, VAL_PREDICTED_TARGETS, average="macro")
     # TEST_F1SCORE_MACRO = f1_score(TEST_INDEXED_TARGET, TEST_PREDICTED_TARGETS, average="macro")
