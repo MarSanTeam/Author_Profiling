@@ -48,17 +48,17 @@ class BaseConfig:
                                          + "/LanguageModels/twitter-roberta-base-irony")
         self.parser.add_argument("--sbert_output_file_path", type=str,
                                  default=Path(__file__).parents[2].__str__()
-                                         + "/assets/sbert.pkl")
+                                         + "/assets/sbert_max.pkl")
 
         self.parser.add_argument("--irony_output_file_path", type=str,
                                  default=Path(__file__).parents[2].__str__()
                                          + "/assets/irony.pkl")
         self.parser.add_argument("--personality_output_file_path", type=str,
                                  default=Path(__file__).parents[2].__str__()
-                                         + "/assets/personality.pkl")
+                                         + "/assets/personality_max.pkl")
         self.parser.add_argument("--myirony_output_file_path", type=str,
                                  default=Path(__file__).parents[2].__str__()
-                                         + "/assets/myirony.pkl")
+                                         + "/assets/myirony_max.pkl")
 
         self.parser.add_argument("--csv_logger_path", type=str,
                                  default=Path(__file__).parents[2].__str__() + "/assets")

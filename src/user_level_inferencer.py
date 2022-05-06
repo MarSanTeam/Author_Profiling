@@ -127,12 +127,14 @@ if __name__ == "__main__":
     logging.debug("Create myirony user embeddings")
 
     # ----------------------------- Train SVM -----------------------------
-    FEATURES = list(np.concatenate([USER_EMBEDDINGS_MYIRONY, USER_EMBEDDINGS], axis=1))
+    FEATURES = list(np.concatenate([USER_EMBEDDINGS_MYIRONY,
+                                    USER_EMBEDDINGS_PERSONALITY
+                                    ], axis=1))
 
     CLF = GradientBoostingClassifier()
     # CLF.fit(FEATURES, INDEXED_TARGET)
 
-    SCORES = cross_val_score(CLF, USER_EMBEDDINGS, INDEXED_TARGET, cv=4)
+    SCORES = cross_val_score(CLF, USER_EMBEDDINGS_PERSONALITY, INDEXED_TARGET, cv=5)
     print(SCORES)
 
     print("%0.4f accuracy with a standard "
