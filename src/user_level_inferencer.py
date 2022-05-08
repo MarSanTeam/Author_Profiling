@@ -29,7 +29,9 @@ from data_loader import read_text, read_pickle, write_pickle
 from utils import create_user_embedding, create_user_embedding_sbert, \
     create_user_embedding_irony, create_user_embedding_personality
 from indexer import Indexer
-from models.t5_personality import Classifier
+from models.t5_personality import Classifier as personality_classofier
+from models.t5_irony import Classifier as irony_classofier
+from models.t5_emotion import Classifier as emotion_classofier
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -81,12 +83,12 @@ if __name__ == "__main__":
 
     EMOTION_MODEL_PATH = "../assets/saved_models/emotion/checkpoints/" \
                          "QTag-epoch=13-val_loss=0.45.ckpt"
-    PERSONALITY_MODEL = Classifier.load_from_checkpoint(PERSONALITY_MODEL_PATH)
+    PERSONALITY_MODEL = personality_classofier.load_from_checkpoint(PERSONALITY_MODEL_PATH)
     PERSONALITY_MODEL.eval()
-    MYIRONY_MODEL = Classifier.load_from_checkpoint(PERSONALITY_MODEL_PATH)
+    MYIRONY_MODEL = irony_classofier.load_from_checkpoint(PERSONALITY_MODEL_PATH)
     MYIRONY_MODEL.eval()
 
-    EMOTION_MODEL = Classifier.load_from_checkpoint(EMOTION_MODEL_PATH)
+    EMOTION_MODEL = emotion_classofier.load_from_checkpoint(EMOTION_MODEL_PATH)
     EMOTION_MODEL.eval()
 
     IRONY_TOKENIZER = AutoTokenizer.from_pretrained(CONFIG.roberta_base_irony_model_path)
