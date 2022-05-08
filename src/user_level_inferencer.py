@@ -78,10 +78,16 @@ if __name__ == "__main__":
 
     MYIRONY_MODEL_PATH = "../assets/saved_models/irony/checkpoints/" \
                          "QTag-epoch=10-val_loss=0.45.ckpt"
+
+    EMOTION_MODEL_PATH = "../assets/saved_models/emotion/checkpoints/" \
+                         "QTag-epoch=13-val_loss=0.45.ckpt"
     PERSONALITY_MODEL = Classifier.load_from_checkpoint(PERSONALITY_MODEL_PATH)
     PERSONALITY_MODEL.eval()
     MYIRONY_MODEL = Classifier.load_from_checkpoint(PERSONALITY_MODEL_PATH)
     MYIRONY_MODEL.eval()
+
+    EMOTION_MODEL = Classifier.load_from_checkpoint(EMOTION_MODEL_PATH)
+    EMOTION_MODEL.eval()
 
     IRONY_TOKENIZER = AutoTokenizer.from_pretrained(CONFIG.roberta_base_irony_model_path)
     PERSONALITY_TOKENIZER = T5Tokenizer.from_pretrained(CONFIG.language_model_tokenizer_path)
@@ -94,15 +100,13 @@ if __name__ == "__main__":
 
     logging.debug("Create user embeddings")
 
-    print(CONFIG.roberta_base_irony_model_path)
-
-    if os.path.exists(CONFIG.irony_output_file_path):
-        USER_EMBEDDINGS_IRONY = read_pickle(CONFIG.irony_output_file_path)
-    else:
-        USER_EMBEDDINGS_IRONY, _ = create_user_embedding_irony(DATA, IRONY_MODEL, IRONY_TOKENIZER)
-        write_pickle(CONFIG.irony_output_file_path, USER_EMBEDDINGS_IRONY)
-
-    logging.debug("Create irony user embeddings")
+    # if os.path.exists(CONFIG.irony_output_file_path):
+    #     USER_EMBEDDINGS_IRONY = read_pickle(CONFIG.irony_output_file_path)
+    # else:
+    #     USER_EMBEDDINGS_IRONY, _ = create_user_embedding_irony(DATA, IRONY_MODEL, IRONY_TOKENIZER)
+    #     write_pickle(CONFIG.irony_output_file_path, USER_EMBEDDINGS_IRONY)
+    #
+    # logging.debug("Create irony user embeddings")
 
     if os.path.exists(CONFIG.personality_output_file_path):
         USER_EMBEDDINGS_PERSONALITY = read_pickle(CONFIG.personality_output_file_path)
@@ -126,6 +130,17 @@ if __name__ == "__main__":
 
     logging.debug("Create myirony user embeddings")
 
+    if os.path.exists(CONFIG.emotion_output_file_path):
+        USER_EMBEDDINGS_EMOTION = read_pickle(CONFIG.emotion_output_file_path)
+    else:
+        USER_EMBEDDINGS_EMOTION, _ = create_user_embedding_personality(DATA,
+                                                                       EMOTION_MODEL,
+                                                                       PERSONALITY_TOKENIZER,
+                                                                       CONFIG.max_len)
+        write_pickle(CONFIG.emotion_output_file_path, USER_EMBEDDINGS_EMOTION)
+
+    logging.debug("Create emotion user embeddings")
+
     # ----------------------------- Train SVM -----------------------------
     FEATURES = list(np.concatenate([USER_EMBEDDINGS_MYIRONY,
                                     USER_EMBEDDINGS_PERSONALITY
@@ -140,18 +155,18 @@ if __name__ == "__main__":
     print("%0.4f accuracy with a standard "
           "deviation of %0.4f" % (SCORES.mean(), SCORES.std()))
 
-    # TRAIN_F1SCORE_MACRO = f1_score(TRAIN_INDEXED_TARGET, TRAIN_PREDICTED_TARGETS, average="macro")
-    # VAL_F1SCORE_MACRO = f1_score(VAL_INDEXED_TARGET, VAL_PREDICTED_TARGETS, average="macro")
-    # TEST_F1SCORE_MACRO = f1_score(TEST_INDEXED_TARGET, TEST_PREDICTED_TARGETS, average="macro")
-    #
-    # logging.debug(f"Train macro F1 score is : {TRAIN_F1SCORE_MACRO * 100:0.2f}")
-    # logging.debug(f"Val macro F1 score is : {VAL_F1SCORE_MACRO * 100:0.2f}")
-    # logging.debug(f"Test macro F1 score is : {TEST_F1SCORE_MACRO * 100:0.2f}")
-    #
-    # TRAIN_F1SCORE_MICRO = f1_score(TRAIN_INDEXED_TARGET, TRAIN_PREDICTED_TARGETS, average="micro")
-    # VAL_F1SCORE_MICRO = f1_score(VAL_INDEXED_TARGET, VAL_PREDICTED_TARGETS, average="micro")
-    # TEST_F1SCORE_MICRO = f1_score(TEST_INDEXED_TARGET, TEST_PREDICTED_TARGETS, average="micro")
-    #
-    # logging.debug(f"Train micro F1 score is : {TRAIN_F1SCORE_MICRO * 100:0.2f}")
-    # logging.debug(f"Val micro F1 score is : {VAL_F1SCORE_MICRO * 100:0.2f}")
-    # logging.debug(f"Test micro F1 score is : {TEST_F1SCORE_MICRO * 100:0.2f}")
+# TRAIN_F1SCORE_MACRO = f1_score(TRAIN_INDEXED_TARGET, TRAIN_PREDICTED_TARGETS, average="macro")
+# VAL_F1SCORE_MACRO = f1_score(VAL_INDEXED_TARGET, VAL_PREDICTED_TARGETS, average="macro")
+# TEST_F1SCORE_MACRO = f1_score(TEST_INDEXED_TARGET, TEST_PREDICTED_TARGETS, average="macro")
+#
+# logging.debug(f"Train macro F1 score is : {TRAIN_F1SCORE_MACRO * 100:0.2f}")
+# logging.debug(f"Val macro F1 score is : {VAL_F1SCORE_MACRO * 100:0.2f}")
+# logging.debug(f"Test macro F1 score is : {TEST_F1SCORE_MACRO * 100:0.2f}")
+#
+# TRAIN_F1SCORE_MICRO = f1_score(TRAIN_INDEXED_TARGET, TRAIN_PREDICTED_TARGETS, average="micro")
+# VAL_F1SCORE_MICRO = f1_score(VAL_INDEXED_TARGET, VAL_PREDICTED_TARGETS, average="micro")
+# TEST_F1SCORE_MICRO = f1_score(TEST_INDEXED_TARGET, TEST_PREDICTED_TARGETS, average="micro")
+#
+# logging.debug(f"Train micro F1 score is : {TRAIN_F1SCORE_MICRO * 100:0.2f}")
+# logging.debug(f"Val micro F1 score is : {VAL_F1SCORE_MICRO * 100:0.2f}")
+# logging.debug(f"Test micro F1 score is : {TEST_F1SCORE_MICRO * 100:0.2f}")

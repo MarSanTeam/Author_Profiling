@@ -93,7 +93,7 @@ def create_user_embedding_personality(data: List[list], model, tokenizer, max_le
                                                     return_tensors="pt")
         # author_tweets = author_tweets.to("cuda:1")
         output = model(author_tweets)
-        output = torch.max(output[-1], dim=0)
+        output = torch.mean(output[-1], dim=0)
         output = output.detach().tolist()
         user_embeddings.append(output)
         user_label.append(author_label)
