@@ -99,3 +99,23 @@ def create_user_embedding_personality(data: List[list], model, tokenizer, max_le
         user_label.append(author_label)
 
     return user_embeddings, user_label
+
+
+def create_data_loader(text: list, max_len: int, batch_size: int, tokenizer, dataset_obj):
+    """
+
+    :param text:
+    :param max_len:
+    :param batch_size:
+    :param tokenizer:
+    :param dataset_obj:
+
+    :return:
+    """
+    dataset = dataset_obj(data={"text": text},
+                          max_len=max_len, tokenizer=tokenizer)
+
+    # Create dataloader
+    dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size,
+                                             shuffle=False, num_workers=8)
+    return dataloader
