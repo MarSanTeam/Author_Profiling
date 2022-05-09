@@ -85,9 +85,9 @@ class InferenceDataset(CustomDataset):
         super(InferenceDataset, self).__init__(data, tokenizer, max_len)
 
     def __getitem__(self, item_index):
-        first_text, second_text = super(InferenceDataset, self).__getitem__(item_index)
+        text = super(InferenceDataset, self).__getitem__(item_index)
 
-        batch = self.pair_data_tokenizer(first_text, second_text)
+        batch = self.single_data_tokenizer(text)
 
         input_ids = batch.input_ids.flatten()
 
@@ -108,15 +108,15 @@ class DataModule(pl.LightningDataModule):
         self.customs_dataset = {}
 
     def setup(self):
-        self.customs_dataset["train_dataset"] = LMDataset(
+        self.customs_dataset["train_dataset"] = InferenceDataset(
             data=self.data["train_data"], tokenizer=self.tokenizer, max_len=self.config.max_len
         )
 
-        self.customs_dataset["val_dataset"] = LMDataset(
+        self.customs_dataset["val_dataset"] = InferenceDataset(
             data=self.data["val_data"], tokenizer=self.tokenizer, max_len=self.config.max_len
         )
 
-        self.customs_dataset["test_dataset"] = LMDataset(
+        self.customs_dataset["test_dataset"] = InferenceDataset(
             data=self.data["test_data"], tokenizer=self.tokenizer, max_len=self.config.max_len
         )
 
