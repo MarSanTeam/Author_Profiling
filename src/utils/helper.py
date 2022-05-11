@@ -2,6 +2,7 @@ from typing import List
 import numpy as np
 import torch
 from scipy.special import softmax
+from dataset import InferenceDataset
 
 
 def create_user_embedding(data, lm_model, tokenizer) -> [list, list]:
@@ -101,10 +102,10 @@ def create_user_embedding_personality(data: List[list], model, tokenizer, max_le
     return user_embeddings, user_label
 
 
-def create_data_loader(text: list, max_len: int, batch_size: int, tokenizer, dataset_obj):
+def create_data_loader(texts: list, max_len: int, batch_size: int, tokenizer, dataset_obj):
     """
 
-    :param text:
+    :param texts:
     :param max_len:
     :param batch_size:
     :param tokenizer:
@@ -112,7 +113,7 @@ def create_data_loader(text: list, max_len: int, batch_size: int, tokenizer, dat
 
     :return:
     """
-    dataset = dataset_obj(data={"text": text},
+    dataset = dataset_obj(data={"texts": texts},
                           max_len=max_len, tokenizer=tokenizer)
 
     # Create dataloader
