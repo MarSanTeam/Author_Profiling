@@ -8,7 +8,8 @@ import torch
 from torch import nn
 import pytorch_lightning as pl
 import torchmetrics
-from transformers import T5EncoderModel
+from transformers import T5EncoderModel, BertModel
+from models.transformers_block import EncoderLayer
 
 
 # ============================ My packages ============================
@@ -19,7 +20,7 @@ class Classifier(pl.LightningModule):
         Classifier
     """
 
-    def __init__(self, num_classes, lm_path, lr, max_len):
+    def __init__(self, num_classes, lm_path, lr, max_len, class_weights):
         super().__init__()
         self.accuracy = torchmetrics.Accuracy()
         self.f_score = torchmetrics.F1(average="none", num_classes=num_classes)
@@ -29,33 +30,36 @@ class Classifier(pl.LightningModule):
 
         self.model = T5EncoderModel.from_pretrained(lm_path)
         self.dense = nn.Linear(self.model.config.d_model, self.model.config.d_model)
+
         self.classifier = nn.Linear(self.model.config.d_model, num_classes)
+        # self.classifier_2 = nn.Linear(self.model.config.d_model, num_classes)
+        # self.classifier_3 = nn.Linear(self.model.config.d_model, num_classes)
+        # self.classifier_4 = nn.Linear(self.model.config.d_model, num_classes)
 
         self.max_pool = nn.MaxPool1d(max_len)
-        self.sigm = nn.Sigmoid()
 
-        self.loss = nn.CrossEntropyLoss()
+        transformer_input_dim = self.model.config.d_model
+        self.enc_layer = EncoderLayer(hid_dim=transformer_input_dim,
+                                      n_heads=8, pf_dim=transformer_input_dim * 2,
+                                      dropout=0.2)
+
+        self.loss_1 = nn.CrossEntropyLoss(weight=torch.FloatTensor(class_weights[0]))
+        self.loss_2 = nn.CrossEntropyLoss(weight=torch.FloatTensor(class_weights[1]))
+        self.loss_3 = nn.CrossEntropyLoss(weight=torch.FloatTensor(class_weights[2]))
+        self.loss_4 = nn.CrossEntropyLoss(weight=torch.FloatTensor(class_weights[3]))
         self.save_hyperparameters()
 
     def forward(self, batch):
-        inputs_ids = batch["input_ids"]
-        # inputs_ids.size() = [batch_size, sen_len]
-        inputs_ids = self.model(inputs_ids).last_hidden_state.permute(0, 2, 1)
-        # output_encoder.size() = [batch_size, hidden_size, sen_len]
-
-        inputs_ids = self.max_pool(inputs_ids).squeeze(2)
-        # maxed_pool.size() = [batch_size, hidden_size]
-
-        inputs_ids = self.dense(inputs_ids)
-        # dense.size() = [batch_size, hidden_size]
-
-        final_output_1 = self.classifier(inputs_ids)
-        # final_output_1.size() = [batch_size, num_class]
-
-        final_output_2 = self.classifier(inputs_ids)
-        final_output_3 = self.classifier(inputs_ids)
-        final_output_4 = self.classifier(inputs_ids)
-        return final_output_1, final_output_2, final_output_3, final_output_4, inputs_ids
+        inputs_ids = batch["texts"]
+        output_encoder = self.model(inputs_ids).last_hidden_state
+        enc_out = self.enc_layer(output_encoder, src_mask=output_encoder).permute(0, 2, 1)
+        maxed_pool = self.max_pool(enc_out).squeeze(2)
+        dense = self.dense(maxed_pool)
+        final_output_1 = self.classifier(dense)
+        final_output_2 = self.classifier(dense)
+        final_output_3 = self.classifier(dense)
+        final_output_4 = self.classifier(dense)
+        return final_output_1, final_output_2, final_output_3, final_output_4, maxed_pool
 
     def training_step(self, batch, batch_idx):
         """
@@ -68,10 +72,10 @@ class Classifier(pl.LightningModule):
         label_3 = batch["targets_3"].flatten()
         label_4 = batch["targets_4"].flatten()
         outputs_1, outputs_2, outputs_3, outputs_4, _ = self.forward(batch)
-        loss_1 = self.loss(outputs_1, label_1)
-        loss_2 = self.loss(outputs_1, label_2)
-        loss_3 = self.loss(outputs_1, label_3)
-        loss_4 = self.loss(outputs_1, label_4)
+        loss_1 = self.loss_1(outputs_1, label_1)
+        loss_2 = self.loss_2(outputs_1, label_2)
+        loss_3 = self.loss_3(outputs_1, label_3)
+        loss_4 = self.loss_4(outputs_1, label_4)
         loss = (loss_1 + loss_2 + loss_3 + loss_4) / 4
 
         metric2value = {"train_loss": loss,
@@ -99,10 +103,10 @@ class Classifier(pl.LightningModule):
         label_3 = batch["targets_3"].flatten()
         label_4 = batch["targets_4"].flatten()
         outputs_1, outputs_2, outputs_3, outputs_4, _ = self.forward(batch)
-        loss_1 = self.loss(outputs_1, label_1)
-        loss_2 = self.loss(outputs_1, label_2)
-        loss_3 = self.loss(outputs_1, label_3)
-        loss_4 = self.loss(outputs_1, label_4)
+        loss_1 = self.loss_1(outputs_1, label_1)
+        loss_2 = self.loss_2(outputs_1, label_2)
+        loss_3 = self.loss_3(outputs_1, label_3)
+        loss_4 = self.loss_4(outputs_1, label_4)
         loss = (loss_1 + loss_2 + loss_3 + loss_4) / 4
 
         metric2value = {"val_loss": loss,
@@ -130,10 +134,10 @@ class Classifier(pl.LightningModule):
         label_3 = batch["targets_3"].flatten()
         label_4 = batch["targets_4"].flatten()
         outputs_1, outputs_2, outputs_3, outputs_4, _ = self.forward(batch)
-        loss_1 = self.loss(outputs_1, label_1)
-        loss_2 = self.loss(outputs_1, label_2)
-        loss_3 = self.loss(outputs_1, label_3)
-        loss_4 = self.loss(outputs_1, label_4)
+        loss_1 = self.loss_1(outputs_1, label_1)
+        loss_2 = self.loss_2(outputs_1, label_2)
+        loss_3 = self.loss_3(outputs_1, label_3)
+        loss_4 = self.loss_4(outputs_1, label_4)
         loss = (loss_1 + loss_2 + loss_3 + loss_4) / 4
 
         metric2value = {"test_loss": loss,

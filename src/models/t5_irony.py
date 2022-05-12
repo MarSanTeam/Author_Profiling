@@ -9,6 +9,7 @@ from torch import nn
 import pytorch_lightning as pl
 import torchmetrics
 from transformers import T5EncoderModel
+from models.transformers_block import EncoderLayer
 
 
 # ============================ My packages ============================
@@ -19,7 +20,7 @@ class Classifier(pl.LightningModule):
         Classifier
     """
 
-    def __init__(self, num_classes, lm_path, lr, max_len):
+    def __init__(self, num_classes, lm_path, lr, max_len, class_weights):
         super().__init__()
         self.accuracy = torchmetrics.Accuracy()
         self.f_score = torchmetrics.F1(average="none", num_classes=num_classes)
@@ -28,19 +29,25 @@ class Classifier(pl.LightningModule):
         self.learning_rare = lr
 
         self.model = T5EncoderModel.from_pretrained(lm_path)
-        self.dense = nn.Linear(self.model.config.d_model, self.model.config.d_model)
+        transformer_input_dim = self.model.config.d_model
+        self.enc_layer = EncoderLayer(hid_dim=transformer_input_dim,
+                                      n_heads=8, pf_dim=transformer_input_dim * 2,
+                                      dropout=0.2)
+
         self.classifier = nn.Linear(self.model.config.d_model, num_classes)
 
         self.max_pool = nn.MaxPool1d(max_len)
-        self.sigm = nn.Sigmoid()
+        self.dense = nn.Linear(self.model.config.d_model, self.model.config.d_model)
 
-        self.loss = nn.CrossEntropyLoss()
+        self.loss = nn.CrossEntropyLoss(weight=torch.FloatTensor(class_weights))
         self.save_hyperparameters()
 
     def forward(self, batch):
         inputs_ids = batch["input_ids"]
-        output_encoder = self.model(inputs_ids).last_hidden_state.permute(0, 2, 1)
-        maxed_pool = self.max_pool(output_encoder).squeeze(2)
+        output_encoder = self.model(inputs_ids).last_hidden_state
+        enc_out = self.enc_layer(output_encoder, src_mask=output_encoder).permute(0, 2, 1)
+
+        maxed_pool = self.max_pool(enc_out).squeeze(2)
         dense = self.dense(maxed_pool)
         final_output = self.classifier(dense)
         return final_output, dense

@@ -55,10 +55,10 @@ class BaseConfig:
                                          + "/assets/irony.pkl")
         self.parser.add_argument("--personality_output_file_path", type=str,
                                  default=Path(__file__).parents[2].__str__()
-                                         + "/assets/personality_mean.pkl")
+                                         + "/assets/personality_mean_transformers.pkl")
         self.parser.add_argument("--myirony_output_file_path", type=str,
                                  default=Path(__file__).parents[2].__str__()
-                                         + "/assets/myirony_mean.pkl")
+                                         + "/assets/myirony_mean_transformers.pkl")
 
         self.parser.add_argument("--emotion_output_file_path", type=str,
                                  default=Path(__file__).parents[2].__str__()
@@ -83,7 +83,7 @@ class BaseConfig:
                                  help="...")
 
         self.parser.add_argument("--max_len", type=int,
-                                 default=100,
+                                 default=200,
                                  help="...")
 
         self.parser.add_argument("--n_epochs", type=int,
