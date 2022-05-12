@@ -50,7 +50,7 @@ class Classifier(pl.LightningModule):
         self.save_hyperparameters()
 
     def forward(self, batch):
-        inputs_ids = batch["texts"]
+        inputs_ids = batch["input_ids"]
         output_encoder = self.model(inputs_ids).last_hidden_state
         enc_out = self.enc_layer(output_encoder, src_mask=output_encoder).permute(0, 2, 1)
         maxed_pool = self.max_pool(enc_out).squeeze(2)

@@ -73,8 +73,8 @@ if __name__ == "__main__":
     # MODEL.eval()
 
     MODEL = SentenceTransformer(CONFIG.sentence_transformers_path, device="cuda:0")
-    IRONY_MODEL = AutoModelForSequenceClassification.from_pretrained(
-        CONFIG.roberta_base_irony_model_path)
+    # IRONY_MODEL = AutoModelForSequenceClassification.from_pretrained(
+    #     CONFIG.roberta_base_irony_model_path)
     PERSONALITY_MODEL_PATH = "../assets/saved_models/personality_transformers/checkpoints/" \
                              "QTag-epoch=10-val_loss=0.66.ckpt"
 
@@ -85,7 +85,7 @@ if __name__ == "__main__":
                          "QTag-epoch=13-val_loss=0.45.ckpt"
     PERSONALITY_MODEL = personality_classofier.load_from_checkpoint(PERSONALITY_MODEL_PATH)
     PERSONALITY_MODEL.eval()
-    MYIRONY_MODEL = irony_classofier.load_from_checkpoint(PERSONALITY_MODEL_PATH)
+    MYIRONY_MODEL = irony_classofier.load_from_checkpoint(MYIRONY_MODEL_PATH)
     MYIRONY_MODEL.eval()
 
     EMOTION_MODEL = emotion_classofier.load_from_checkpoint(EMOTION_MODEL_PATH)
