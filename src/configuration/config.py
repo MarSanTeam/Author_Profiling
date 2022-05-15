@@ -62,7 +62,7 @@ class BaseConfig:
 
         self.parser.add_argument("--emotion_output_file_path", type=str,
                                  default=Path(__file__).parents[2].__str__()
-                                         + "/assets/emotion_mean.pkl")
+                                         + "/assets/emotion_mean_transformers.pkl")
 
         self.parser.add_argument("--csv_logger_path", type=str,
                                  default=Path(__file__).parents[2].__str__() + "/assets")

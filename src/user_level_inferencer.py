@@ -81,14 +81,14 @@ if __name__ == "__main__":
     MYIRONY_MODEL_PATH = "../assets/saved_models/irony_transformers/checkpoints/" \
                          "QTag-epoch=13-val_loss=0.37.ckpt"
 
-    EMOTION_MODEL_PATH = "../assets/saved_models/emotion/checkpoints/" \
-                         "QTag-epoch=13-val_loss=0.45.ckpt"
+    EMOTION_MODEL_PATH = "../assets/saved_models/emotion_transformers/checkpoints/" \
+                         "QTag-epoch=04-val_loss=2.14.ckpt"
     PERSONALITY_MODEL = personality_classofier.load_from_checkpoint(PERSONALITY_MODEL_PATH)
     PERSONALITY_MODEL.eval()
     MYIRONY_MODEL = irony_classofier.load_from_checkpoint(MYIRONY_MODEL_PATH)
     MYIRONY_MODEL.eval()
 
-    EMOTION_MODEL = emotion_classofier.load_from_checkpoint(EMOTION_MODEL_PATH)
+    EMOTION_MODEL = irony_classofier.load_from_checkpoint(EMOTION_MODEL_PATH)
     EMOTION_MODEL.eval()
 
     IRONY_TOKENIZER = AutoTokenizer.from_pretrained(CONFIG.roberta_base_irony_model_path)
