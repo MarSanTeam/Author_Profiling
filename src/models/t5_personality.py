@@ -27,6 +27,7 @@ class Classifier(pl.LightningModule):
         self.f_score_total = torchmetrics.F1(average="weighted", num_classes=num_classes)
         self.max_len = max_len
         self.learning_rare = lr
+        self.class_weights = class_weights
 
         self.model = T5EncoderModel.from_pretrained(lm_path)
         self.dense = nn.Linear(self.model.config.d_model, self.model.config.d_model)
@@ -38,22 +39,22 @@ class Classifier(pl.LightningModule):
 
         self.max_pool = nn.MaxPool1d(max_len)
 
-        transformer_input_dim = self.model.config.d_model
-        self.enc_layer = EncoderLayer(hid_dim=transformer_input_dim,
-                                      n_heads=8, pf_dim=transformer_input_dim * 2,
-                                      dropout=0.2)
+        # transformer_input_dim = self.model.config.d_model
+        # self.enc_layer = EncoderLayer(hid_dim=transformer_input_dim,
+        #                               n_heads=8, pf_dim=transformer_input_dim * 2,
+        #                               dropout=0.2)
 
-        self.loss_1 = nn.CrossEntropyLoss(weight=torch.FloatTensor(class_weights[0]))
-        self.loss_2 = nn.CrossEntropyLoss(weight=torch.FloatTensor(class_weights[1]))
-        self.loss_3 = nn.CrossEntropyLoss(weight=torch.FloatTensor(class_weights[2]))
-        self.loss_4 = nn.CrossEntropyLoss(weight=torch.FloatTensor(class_weights[3]))
+        self.loss_1 = nn.CrossEntropyLoss(weight=torch.FloatTensor(self.class_weights[0]))
+        self.loss_2 = nn.CrossEntropyLoss(weight=torch.FloatTensor(self.class_weights[1]))
+        self.loss_3 = nn.CrossEntropyLoss(weight=torch.FloatTensor(self.class_weights[2]))
+        self.loss_4 = nn.CrossEntropyLoss(weight=torch.FloatTensor(self.class_weights[3]))
         self.save_hyperparameters()
 
     def forward(self, batch):
-        inputs_ids = batch["input_ids"]
-        output_encoder = self.model(inputs_ids).last_hidden_state
-        enc_out = self.enc_layer(output_encoder, src_mask=output_encoder).permute(0, 2, 1)
-        maxed_pool = self.max_pool(enc_out).squeeze(2)
+        inputs_ids = batch["texts"]
+        output_encoder = self.model(inputs_ids).last_hidden_state.permute(0, 2, 1)
+        # enc_out = self.enc_layer(output_encoder, src_mask=output_encoder).permute(0, 2, 1)
+        maxed_pool = self.max_pool(output_encoder).squeeze(2)
         dense = self.dense(maxed_pool)
         final_output_1 = self.classifier(dense)
         final_output_2 = self.classifier(dense)
