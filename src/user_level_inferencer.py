@@ -153,8 +153,13 @@ if __name__ == "__main__":
     CLF = GradientBoostingClassifier()
     # CLF.fit(FEATURES, INDEXED_TARGET)
 
-    SCORES = cross_val_score(CLF, FEATURES, INDEXED_TARGET, cv=4)
+    SCORES = cross_val_score(CLF, FEATURES, INDEXED_TARGET, cv=5)
     print(SCORES)
+    CI = 0
+    for s in SCORES:
+        print(calculate_confidence_interval(s, len(FEATURES)//5, 95))
+        CI += calculate_confidence_interval(s, len(FEATURES)//5, 95)
+    print(CI/5)
 
     print("%0.4f accuracy with a standard "
           "deviation of %0.4f" % (SCORES.mean(), SCORES.std()))
