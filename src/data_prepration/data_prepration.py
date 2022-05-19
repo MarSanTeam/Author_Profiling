@@ -4,7 +4,7 @@ from data_loader import read_xml
 import os
 
 
-def prepare_ap_data(path: str, author2irony: dict, training_data: bool = True) -> list:
+def prepare_ap_data(path: str, author2irony: dict = None, training_data: bool = True) -> list:
     """
 
     :param path:
@@ -24,7 +24,7 @@ def prepare_ap_data(path: str, author2irony: dict, training_data: bool = True) -
             if training_data:
                 data.append([author_tweets, author2irony[author_id]])
             else:
-                data.append([author_tweets])
+                data.append([author_tweets, author_id])
     return data
 
 # if name == "__main__":
