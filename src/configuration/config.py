@@ -55,14 +55,14 @@ class BaseConfig:
                                          + "/assets/irony.pkl")
         self.parser.add_argument("--personality_output_file_path", type=str,
                                  default=Path(__file__).parents[2].__str__()
-                                         + "/assets/personality_mean_new.pkl")
+                                         + "/assets/personality_mean.pkl")
         self.parser.add_argument("--myirony_output_file_path", type=str,
                                  default=Path(__file__).parents[2].__str__()
-                                         + "/assets/myirony_mean_new.pkl")
+                                         + "/assets/myirony_mean.pkl")
 
         self.parser.add_argument("--emotion_output_file_path", type=str,
                                  default=Path(__file__).parents[2].__str__()
-                                         + "/assets/emotion_mean_new.pkl")
+                                         + "/assets/emotion_mean.pkl")
 
         self.parser.add_argument("--csv_logger_path", type=str,
                                  default=Path(__file__).parents[2].__str__() + "/assets")

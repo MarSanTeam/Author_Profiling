@@ -9,6 +9,7 @@
 # ========================================================
 
 import os
+import pickle
 from sklearn import svm
 from sklearn.linear_model import SGDClassifier
 from sklearn.ensemble import GradientBoostingClassifier
@@ -27,7 +28,7 @@ from configuration import BaseConfig
 from data_prepration import prepare_ap_data, create_author_label
 from data_loader import read_text, read_pickle, write_pickle
 from utils import create_user_embedding, create_user_embedding_sbert, \
-    create_user_embedding_irony, create_user_embedding_personality
+    create_user_embedding_irony, create_user_embedding_personality, calculate_confidence_interval
 from indexer import Indexer
 from models.t5_personality import Classifier as personality_classofier
 from models.t5_irony import Classifier as irony_classofier
@@ -72,24 +73,16 @@ if __name__ == "__main__":
     # MODEL = BertModel.from_pretrained(CONFIG.language_model_path, return_dict=True)
     # MODEL.eval()
 
-    MODEL = SentenceTransformer(CONFIG.sentence_transformers_path, device="cuda:0")
     # IRONY_MODEL = AutoModelForSequenceClassification.from_pretrained(
     #     CONFIG.roberta_base_irony_model_path)
-    PERSONALITY_MODEL_PATH = "../assets/saved_models/BERT_Large/personality/checkpoints/" \
-                             "QTag-epoch=05-val_loss=0.66.ckpt"
+    PERSONALITY_MODEL_PATH = "../assets/saved_models/personality/checkpoints/" \
+                             "QTag-epoch=08-val_loss=0.65.ckpt"
 
-    MYIRONY_MODEL_PATH = "../assets/saved_models/BERT_Large/irony/checkpoints/" \
-                         "QTag-epoch=06-val_loss=0.44.ckpt"
+    MYIRONY_MODEL_PATH = "../assets/saved_models/irony/checkpoints/" \
+                         "QTag-epoch=10-val_loss=0.45.ckpt"
 
-    EMOTION_MODEL_PATH = "../assets/saved_models/BERT_Large/emotion/checkpoints/" \
-                         "QTag-epoch=04-val_loss=2.11.ckpt"
-    PERSONALITY_MODEL = personality_classofier.load_from_checkpoint(PERSONALITY_MODEL_PATH)
-    PERSONALITY_MODEL.eval()
-    MYIRONY_MODEL = irony_classofier.load_from_checkpoint(MYIRONY_MODEL_PATH)
-    MYIRONY_MODEL.eval()
-
-    EMOTION_MODEL = irony_classofier.load_from_checkpoint(EMOTION_MODEL_PATH)
-    EMOTION_MODEL.eval()
+    EMOTION_MODEL_PATH = "../assets/saved_models/emotion/checkpoints/" \
+                         "QTag-epoch=13-val_loss=0.45.ckpt"
 
     IRONY_TOKENIZER = AutoTokenizer.from_pretrained(CONFIG.roberta_base_irony_model_path)
     PERSONALITY_TOKENIZER = T5Tokenizer.from_pretrained(CONFIG.language_model_tokenizer_path)
@@ -97,6 +90,7 @@ if __name__ == "__main__":
     if os.path.exists(CONFIG.sbert_output_file_path):
         USER_EMBEDDINGS, USER_LABEL = read_pickle(CONFIG.sbert_output_file_path)
     else:
+        MODEL = SentenceTransformer(CONFIG.sentence_transformers_path, device="cuda:0")
         USER_EMBEDDINGS, USER_LABEL = create_user_embedding_sbert(DATA, MODEL)  # , TOKENIZER)
         write_pickle(CONFIG.sbert_output_file_path, [USER_EMBEDDINGS, USER_LABEL])
 
@@ -113,6 +107,8 @@ if __name__ == "__main__":
     if os.path.exists(CONFIG.personality_output_file_path):
         USER_EMBEDDINGS_PERSONALITY = read_pickle(CONFIG.personality_output_file_path)
     else:
+        PERSONALITY_MODEL = personality_classofier.load_from_checkpoint(PERSONALITY_MODEL_PATH)
+        PERSONALITY_MODEL.eval()
         USER_EMBEDDINGS_PERSONALITY, _ = create_user_embedding_personality(DATA,
                                                                            PERSONALITY_MODEL,
                                                                            PERSONALITY_TOKENIZER,
@@ -124,6 +120,8 @@ if __name__ == "__main__":
     if os.path.exists(CONFIG.myirony_output_file_path):
         USER_EMBEDDINGS_MYIRONY = read_pickle(CONFIG.myirony_output_file_path)
     else:
+        MYIRONY_MODEL = irony_classofier.load_from_checkpoint(MYIRONY_MODEL_PATH)
+        MYIRONY_MODEL.eval()
         USER_EMBEDDINGS_MYIRONY, _ = create_user_embedding_personality(DATA,
                                                                        MYIRONY_MODEL,
                                                                        PERSONALITY_TOKENIZER,
@@ -135,6 +133,8 @@ if __name__ == "__main__":
     if os.path.exists(CONFIG.emotion_output_file_path):
         USER_EMBEDDINGS_EMOTION = read_pickle(CONFIG.emotion_output_file_path)
     else:
+        EMOTION_MODEL = irony_classofier.load_from_checkpoint(EMOTION_MODEL_PATH)
+        EMOTION_MODEL.eval()
         USER_EMBEDDINGS_EMOTION, _ = create_user_embedding_personality(DATA,
                                                                        EMOTION_MODEL,
                                                                        PERSONALITY_TOKENIZER,
@@ -144,18 +144,27 @@ if __name__ == "__main__":
     logging.debug("Create emotion user embeddings")
 
     # ----------------------------- Train SVM -----------------------------
-    FEATURES = list(np.concatenate([USER_EMBEDDINGS_MYIRONY,
+    FEATURES = list(np.concatenate([USER_EMBEDDINGS,
+                                    USER_EMBEDDINGS_MYIRONY,
+                                    USER_EMBEDDINGS_EMOTION,
                                     USER_EMBEDDINGS_PERSONALITY
                                     ], axis=1))
 
     CLF = GradientBoostingClassifier()
     # CLF.fit(FEATURES, INDEXED_TARGET)
 
-    SCORES = cross_val_score(CLF, USER_EMBEDDINGS_PERSONALITY, INDEXED_TARGET, cv=5)
+    SCORES = cross_val_score(CLF, FEATURES, INDEXED_TARGET, cv=4)
     print(SCORES)
 
     print("%0.4f accuracy with a standard "
           "deviation of %0.4f" % (SCORES.mean(), SCORES.std()))
+
+    # filename = "finalized_model.sav"
+    # pickle.dump(CLF, open(filename, "wb"))
+    #
+    # loaded_model = pickle.load(open(filename, 'rb'))
+    # result = loaded_model.score(FEATURES[-10:], INDEXED_TARGET[-10:])
+    # print(result)
 
 # TRAIN_F1SCORE_MACRO = f1_score(TRAIN_INDEXED_TARGET, TRAIN_PREDICTED_TARGETS, average="macro")
 # VAL_F1SCORE_MACRO = f1_score(VAL_INDEXED_TARGET, VAL_PREDICTED_TARGETS, average="macro")

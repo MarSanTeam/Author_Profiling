@@ -37,7 +37,7 @@ class Classifier(pl.LightningModule):
 
         self.classifier = nn.Linear(self.model.config.d_model, num_classes)
 
-        self.max_pool = nn.MaxPool1d(max_len)
+        self.max_pool = nn.MaxPool1d(200)
         self.dense = nn.Linear(self.model.config.d_model, self.model.config.d_model)
 
         self.loss = nn.CrossEntropyLoss(weight=torch.FloatTensor(self.class_weights))

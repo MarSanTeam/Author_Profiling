@@ -4,11 +4,12 @@ from data_loader import read_xml
 import os
 
 
-def prepare_ap_data(path: str, author2irony: dict) -> list:
+def prepare_ap_data(path: str, author2irony: dict, training_data: bool = True) -> list:
     """
 
     :param path:
     :param author2irony:
+    :param training_data:
     :return:
     """
     data = []
@@ -20,9 +21,11 @@ def prepare_ap_data(path: str, author2irony: dict) -> list:
             for child in root:
                 for inch in child:
                     author_tweets.append(inch.text)
-            data.append([author_tweets, author2irony[author_id]])
+            if training_data:
+                data.append([author_tweets, author2irony[author_id]])
+            else:
+                data.append([author_tweets])
     return data
-
 
 # if name == "__main__":
 #     DATA = read_text(path=os.path.join(CONFIG.raw_data_dir, CONFIG.truth_data))
