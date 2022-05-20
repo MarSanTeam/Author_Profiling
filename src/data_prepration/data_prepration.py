@@ -4,15 +4,14 @@ from data_loader import read_xml
 import os
 
 
-def prepare_ap_data(path: str, author2irony: dict = None) -> [List[str], list]:
+def prepare_ap_data(path: str, author2irony: dict = None) -> list:
     """
 
     :param path:
     :param author2irony:
     :return:
     """
-    users_tweets = []
-    users_id = []
+    data = []
     for file in os.listdir(path):
         if file[-4:] == ".xml":
             author_tweets = []
@@ -22,12 +21,10 @@ def prepare_ap_data(path: str, author2irony: dict = None) -> [List[str], list]:
                 for inch in child:
                     author_tweets.append(inch.text)
             if author2irony:
-                users_tweets.append(author_tweets)
-                users_id.append(author2irony[author_id])
+                data.append([author_tweets, author2irony[author_id]])
             else:
-                users_tweets.append(author_tweets)
-                users_id.append(author_id)
-    return users_tweets, users_id
+                data.append([author_tweets, author_id])
+    return data
 
 # if name == "__main__":
 #     DATA = read_text(path=os.path.join(CONFIG.raw_data_dir, CONFIG.truth_data))

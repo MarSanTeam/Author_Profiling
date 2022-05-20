@@ -1,6 +1,10 @@
 import pickle
+import numpy as np
 from sentence_transformers import SentenceTransformer
 from transformers import T5Tokenizer
+
+from xml.dom import minidom
+import logging
 
 from configuration import BaseConfig
 from data_prepration import prepare_ap_data
@@ -9,12 +13,16 @@ from utils import create_user_embedding_sbert, \
 from models.t5_irony import Classifier as irony_classifier
 from models.t5_personality import Classifier as personality_classifier
 
+logging.basicConfig(level=logging.DEBUG)
+
 if __name__ == "__main__":
     # create config instance
     CONFIG_CLASS = BaseConfig()
     CONFIG = CONFIG_CLASS.get_config()
 
-    FILENAME = "finalized_model.sav"
+    FILENAME = "best_model_gradient_boosting.sav"
+    CLF = pickle.load(open(FILENAME, "rb"))
+    logging.debug("Classifier was loaded")
 
     PERSONALITY_MODEL_PATH = "../assets/saved_models/personality/checkpoints/" \
                              "QTag-epoch=08-val_loss=0.65.ckpt"
@@ -25,31 +33,77 @@ if __name__ == "__main__":
     EMOTION_MODEL_PATH = "../assets/saved_models/emotion/checkpoints/" \
                          "QTag-epoch=13-val_loss=0.45.ckpt"
 
-    LOADED_MODEL = pickle.load(open(FILENAME, "rb"))
-    DATA = prepare_ap_data(path="", training_data=False)
+    # DATA = prepare_ap_data(path="../data/Raw/en/")
+    # DATA = DATA[:1]
+    # logging.debug("Dataset was loaded")
+    #
+    # PERSONALITY_TOKENIZER = T5Tokenizer.from_pretrained(CONFIG.language_model_tokenizer_path)
+    # logging.debug("T5 Tokenizer was loaded")
+    #
+    # SBERT = SentenceTransformer(CONFIG.sentence_transformers_path, device="cuda:0")
+    # logging.debug("SBERT model was loaded")
+    #
+    # IRONY_MODEL = irony_classifier.load_from_checkpoint(IRONY_MODEL_PATH)
+    # IRONY_MODEL.eval()
+    # logging.debug("Irony model was loaded")
+    #
+    # PERSONALITY_MODEL = personality_classifier.load_from_checkpoint(PERSONALITY_MODEL_PATH)
+    # PERSONALITY_MODEL.eval()
+    # logging.debug("Personality model was loaded")
+    #
+    # EMOTION_MODEL = irony_classifier.load_from_checkpoint(EMOTION_MODEL_PATH)
+    # EMOTION_MODEL.eval()
+    # logging.debug("Emotion model was loaded")
+    #
+    # USER_EMBEDDINGS, USER_ID = create_user_embedding_sbert(DATA, SBERT)
+    # logging.debug("User contextual embedding was created")
+    #
+    # USER_EMBEDDINGS_PERSONALITY, _ = create_user_embedding_personality(DATA,
+    #                                                                    PERSONALITY_MODEL,
+    #                                                                    PERSONALITY_TOKENIZER,
+    #                                                                    CONFIG.max_len)
+    # logging.debug("User personality embedding was created")
+    #
+    # USER_EMBEDDINGS_IRONY, _ = create_user_embedding_personality(DATA,
+    #                                                              IRONY_MODEL,
+    #                                                              PERSONALITY_TOKENIZER,
+    #                                                              CONFIG.max_len)
+    # logging.debug("User irony embedding was created")
+    #
+    # USER_EMBEDDINGS_EMOTION, _ = create_user_embedding_personality(DATA,
+    #                                                                EMOTION_MODEL,
+    #                                                                PERSONALITY_TOKENIZER,
+    #                                                                CONFIG.max_len)
+    # logging.debug("User emotion embedding was created")
+    #
+    # FEATURES = list(np.concatenate([USER_EMBEDDINGS,
+    #                                 USER_EMBEDDINGS_IRONY,
+    #                                 USER_EMBEDDINGS_EMOTION,
+    #                                 USER_EMBEDDINGS_PERSONALITY
+    #                                 ], axis=1))
+    #
+    # MODEL_OUTPUTS = CLF.predict(FEATURES)
+    # logging.debug("Predicted user labels")
+    # print(MODEL_OUTPUTS)
+    # from xml.etree.ElementTree import Element,tostring
+    # elem = Element("")
+    # child = Element("author id")
+    # child.text = str("123456")
+    # elem.append(child)
+    root = minidom.Document()
 
-    PERSONALITY_TOKENIZER = T5Tokenizer.from_pretrained(CONFIG.language_model_tokenizer_path)
+    xml = root.createElement('root')
+    root.appendChild(xml)
 
-    SBERT = SentenceTransformer(CONFIG.sentence_transformers_path, device="cuda:0")
-    IRONY_MODEL = irony_classifier.load_from_checkpoint(IRONY_MODEL_PATH)
-    PERSONALITY_MODEL = personality_classifier.load_from_checkpoint(PERSONALITY_MODEL_PATH)
-    EMOTION_MODEL = irony_classifier.load_from_checkpoint(EMOTION_MODEL_PATH)
-    IRONY_MODEL.eval()
-    PERSONALITY_MODEL.eval()
-    EMOTION_MODEL.eval()
+    productChild = root.createElement('')
+    productChild.setAttribute('name', 'Geeks for Geeks')
 
-    USER_EMBEDDINGS, USER_ID = create_user_embedding_sbert(DATA, SBERT)
-    USER_EMBEDDINGS_PERSONALITY, _ = create_user_embedding_personality(DATA,
-                                                                       PERSONALITY_MODEL,
-                                                                       PERSONALITY_TOKENIZER,
-                                                                       CONFIG.max_len)
-    USER_EMBEDDINGS_IRONY, _ = create_user_embedding_personality(DATA,
-                                                                 IRONY_MODEL,
-                                                                 PERSONALITY_TOKENIZER,
-                                                                 CONFIG.max_len)
-    USER_EMBEDDINGS_EMOTION, _ = create_user_embedding_personality(DATA,
-                                                                   EMOTION_MODEL,
-                                                                   PERSONALITY_TOKENIZER,
-                                                                   CONFIG.max_len)
+    xml.appendChild(productChild)
 
-    CLF = pickle.load(open(FILENAME, "rb"))
+    xml_str = root.toprettyxml(indent="\t")
+
+    save_path_file = "gfg.xml"
+
+    with open(save_path_file, "w") as f:
+        f.write(xml_str)
+
