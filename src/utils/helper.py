@@ -2,8 +2,11 @@ from typing import List
 import numpy as np
 import torch
 from math import sqrt
-from scipy.special import softmax
-from dataset import InferenceDataset
+import statistics
+from sklearn.metrics import accuracy_score, f1_score
+from sklearn.model_selection import StratifiedKFold
+from sklearn.metrics import classification_report
+from sklearn.metrics import confusion_matrix
 
 
 def create_user_embedding(data, lm_model, tokenizer) -> [list, list]:
@@ -142,3 +145,32 @@ def calculate_confidence_interval(metric_value: float, n_samples: int,
         confidence_interval_percentage2standard_deviations_value[confidence_interval_percentage]
     interval = confidence_interval_constant * sqrt((metric_value * (1 - metric_value)) / n_samples)
     return interval
+
+
+def get_split_data(features: list, labels: list, indexes: list) -> [list, list]:
+    """
+
+    :param features:
+    :param labels:
+    :param indexes:
+    :return:
+    """
+    selected_features = [features[index] for index in indexes]
+    selected_labels = [labels[index] for index in indexes]
+    return selected_features, selected_labels
+
+
+def cross_validator(classifier, features, labels, cv):
+    skf = StratifiedKFold(n_splits=cv, shuffle=True, random_state=1234)
+    cv_scores = []
+    cv_ci = []
+    for train_index, test_index in skf.split(features, labels):
+        x_train, y_train = get_split_data(features, labels, train_index)
+        x_test, y_test = get_split_data(features, labels, test_index)
+        classifier.fit(x_train, y_train)
+        predictions = classifier.predict(x_test)
+        acc = accuracy_score(y_test, predictions)
+        ci = calculate_confidence_interval(acc, len(y_test), 95)
+        cv_scores.append(acc)
+        cv_ci.append(ci)
+    return np.array(cv_scores), np.array(cv_ci)

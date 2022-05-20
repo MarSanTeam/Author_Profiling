@@ -28,7 +28,8 @@ from configuration import BaseConfig
 from data_prepration import prepare_ap_data, create_author_label
 from data_loader import read_text, read_pickle, write_pickle
 from utils import create_user_embedding, create_user_embedding_sbert, \
-    create_user_embedding_irony, create_user_embedding_personality, calculate_confidence_interval
+    create_user_embedding_irony, create_user_embedding_personality, \
+    calculate_confidence_interval, cross_validator
 from indexer import Indexer
 from models.t5_personality import Classifier as personality_classofier
 from models.t5_irony import Classifier as irony_classofier
@@ -150,26 +151,36 @@ if __name__ == "__main__":
                                     USER_EMBEDDINGS_PERSONALITY
                                     ], axis=1))
 
-    CLF = GradientBoostingClassifier()
-    # CLF.fit(FEATURES, INDEXED_TARGET)
+    CLF = GradientBoostingClassifier()#learning_rate=0.2, max_depth=3)#, n_estimators=50)
+    # CLF = svm.SVC()
+    # CLF.fit(FEATURES[:200], INDEXED_TARGET[:200])
 
-    SCORES = cross_val_score(CLF, FEATURES, INDEXED_TARGET, cv=5)
-    print(SCORES)
-    CI = 0
-    for s in SCORES:
-        print(calculate_confidence_interval(s, len(FEATURES)//5, 95))
-        CI += calculate_confidence_interval(s, len(FEATURES)//5, 95)
-    print(CI/5)
-
+    SCORES, CI = cross_validator(CLF, FEATURES, INDEXED_TARGET, cv=5)
     print("%0.4f accuracy with a standard "
           "deviation of %0.4f" % (SCORES.mean(), SCORES.std()))
+    print("%0.4f ci with a standard "
+          "deviation of %0.4f" % (CI.mean(), CI.std()))
+    SCORES, CI = cross_validator(CLF, FEATURES, INDEXED_TARGET, cv=10)
+    print("%0.4f accuracy with a standard "
+          "deviation of %0.4f" % (SCORES.mean(), SCORES.std()))
+    print("%0.4f ci with a standard "
+          "deviation of %0.4f" % (CI.mean(), CI.std()))
+# SCORES = cross_val_score(CLF, FEATURES, INDEXED_TARGET, cv=5)
+# print(SCORES)
+# print(CI)
+# CI = 0
+# for s in SCORES:
+#     CI += calculate_confidence_interval(s, len(FEATURES)//5, 95)
+# print(CI/5)
+#
 
-    # filename = "finalized_model.sav"
-    # pickle.dump(CLF, open(filename, "wb"))
-    #
-    # loaded_model = pickle.load(open(filename, 'rb'))
-    # result = loaded_model.score(FEATURES[-10:], INDEXED_TARGET[-10:])
-    # print(result)
+
+# filename = "finalized_model.sav"
+# pickle.dump(CLF, open(filename, "wb"))
+#
+# loaded_model = pickle.load(open(filename, 'rb'))
+# result = loaded_model.score(FEATURES[-10:], INDEXED_TARGET[-10:])
+# print(result)
 
 # TRAIN_F1SCORE_MACRO = f1_score(TRAIN_INDEXED_TARGET, TRAIN_PREDICTED_TARGETS, average="macro")
 # VAL_F1SCORE_MACRO = f1_score(VAL_INDEXED_TARGET, VAL_PREDICTED_TARGETS, average="macro")
