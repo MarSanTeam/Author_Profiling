@@ -7,6 +7,7 @@ from sklearn.metrics import accuracy_score, f1_score
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
+import xml.etree.cElementTree as ET
 
 
 def create_user_embedding(data, lm_model, tokenizer) -> [list, list]:
@@ -174,3 +175,16 @@ def cross_validator(classifier, features, labels, cv):
         cv_scores.append(acc)
         cv_ci.append(ci)
     return np.array(cv_scores), np.array(cv_ci)
+
+
+def save_output(path: str, author_id: str, label: str) -> None:
+    """
+
+    :param path:
+    :param author_id:
+    :param label:
+    :return:
+    """
+    author = ET.Element("author", id=str(author_id), lang="en", type=label)
+    tree = ET.ElementTree(author)
+    tree.write(path)
