@@ -53,13 +53,10 @@ class Classifier(pl.LightningModule):
     def forward(self, batch):
         inputs_ids = batch["input_ids"]
         output_encoder = self.model(inputs_ids).last_hidden_state.permute(0, 2, 1)
-        print(output_encoder.size())
         # enc_out = self.enc_layer(output_encoder, src_mask=output_encoder).permute(0, 2, 1)
         maxed_pool = self.max_pool(output_encoder).squeeze(2)
-        print(maxed_pool.size())
 
         dense = self.dense(maxed_pool)
-        print(dense.size())
 
         final_output_1 = self.classifier(dense)
         final_output_2 = self.classifier(dense)
