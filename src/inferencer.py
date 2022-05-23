@@ -1,14 +1,14 @@
+import os
 import pickle
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from transformers import T5Tokenizer
 
-from xml.dom import minidom
 import logging
 
 from configuration import BaseConfig
 from data_prepration import prepare_ap_data
-from utils import create_user_embedding_sbert, \
+from utils import create_user_embedding_sbert, save_output, \
     create_user_embedding_irony, create_user_embedding_personality, calculate_confidence_interval
 from models.t5_irony import Classifier as irony_classifier
 from models.t5_personality import Classifier as personality_classifier
@@ -33,16 +33,16 @@ if __name__ == "__main__":
     EMOTION_MODEL_PATH = "../assets/saved_models/emotion/checkpoints/" \
                          "QTag-epoch=13-val_loss=0.45.ckpt"
 
-    # DATA = prepare_ap_data(path="../data/Raw/en/")
-    # DATA = DATA[:1]
-    # logging.debug("Dataset was loaded")
-    #
-    # PERSONALITY_TOKENIZER = T5Tokenizer.from_pretrained(CONFIG.language_model_tokenizer_path)
-    # logging.debug("T5 Tokenizer was loaded")
-    #
-    # SBERT = SentenceTransformer(CONFIG.sentence_transformers_path, device="cuda:0")
-    # logging.debug("SBERT model was loaded")
-    #
+    DATA = prepare_ap_data(path="../data/Raw/en/")
+    DATA = DATA[:1]
+    logging.debug("Dataset was loaded")
+
+    PERSONALITY_TOKENIZER = T5Tokenizer.from_pretrained(CONFIG.language_model_tokenizer_path)
+    logging.debug("T5 Tokenizer was loaded")
+
+    SBERT = SentenceTransformer(CONFIG.sentence_transformers_path, device="cuda:0")
+    logging.debug("SBERT model was loaded")
+
     # IRONY_MODEL = irony_classifier.load_from_checkpoint(IRONY_MODEL_PATH)
     # IRONY_MODEL.eval()
     # logging.debug("Irony model was loaded")
@@ -54,10 +54,10 @@ if __name__ == "__main__":
     # EMOTION_MODEL = irony_classifier.load_from_checkpoint(EMOTION_MODEL_PATH)
     # EMOTION_MODEL.eval()
     # logging.debug("Emotion model was loaded")
-    #
-    # USER_EMBEDDINGS, USER_ID = create_user_embedding_sbert(DATA, SBERT)
-    # logging.debug("User contextual embedding was created")
-    #
+
+    USER_EMBEDDINGS, USER_ID = create_user_embedding_sbert(DATA, SBERT)
+    logging.debug("User contextual embedding was created")
+
     # USER_EMBEDDINGS_PERSONALITY, _ = create_user_embedding_personality(DATA,
     #                                                                    PERSONALITY_MODEL,
     #                                                                    PERSONALITY_TOKENIZER,
@@ -75,35 +75,21 @@ if __name__ == "__main__":
     #                                                                PERSONALITY_TOKENIZER,
     #                                                                CONFIG.max_len)
     # logging.debug("User emotion embedding was created")
-    #
-    # FEATURES = list(np.concatenate([USER_EMBEDDINGS,
-    #                                 USER_EMBEDDINGS_IRONY,
-    #                                 USER_EMBEDDINGS_EMOTION,
-    #                                 USER_EMBEDDINGS_PERSONALITY
-    #                                 ], axis=1))
-    #
-    # MODEL_OUTPUTS = CLF.predict(FEATURES)
-    # logging.debug("Predicted user labels")
-    # print(MODEL_OUTPUTS)
-    # from xml.etree.ElementTree import Element,tostring
-    # elem = Element("")
-    # child = Element("author id")
-    # child.text = str("123456")
-    # elem.append(child)
-    root = minidom.Document()
 
-    xml = root.createElement('root')
-    root.appendChild(xml)
+    FEATURES = list(np.concatenate([USER_EMBEDDINGS,
+                                    USER_EMBEDDINGS,
+                                    USER_EMBEDDINGS,
+                                    USER_EMBEDDINGS
+                                    ], axis=1))
 
-    productChild = root.createElement('')
-    productChild.setAttribute('name', 'Geeks for Geeks')
+    MODEL_OUTPUTS = CLF.predict(FEATURES)
+    logging.debug("Predicted user labels")
+    print(MODEL_OUTPUTS)
+    print(USER_ID)
 
-    xml.appendChild(productChild)
+    idx2label = {0: "NI", 1: "I"}
 
-    xml_str = root.toprettyxml(indent="\t")
-
-    save_path_file = "gfg.xml"
-
-    with open(save_path_file, "w") as f:
-        f.write(xml_str)
-
+    assert len(USER_ID) == len(MODEL_OUTPUTS)
+    for index in range(len(USER_ID)):
+        save_output(path=str(USER_ID[index]) + ".xml", author_id=str(USER_ID[index]),
+                    label=idx2label[MODEL_OUTPUTS[index]])
