@@ -92,6 +92,8 @@ if __name__ == "__main__":
         USER_EMBEDDINGS, USER_LABEL = read_pickle(CONFIG.sbert_output_file_path)
     else:
         MODEL = SentenceTransformer(CONFIG.sentence_transformers_path, device="cuda:0")
+        MODEL = MODEL.to("cuda:0")
+
         USER_EMBEDDINGS, USER_LABEL = create_user_embedding_sbert(DATA, MODEL)  # , TOKENIZER)
         write_pickle(CONFIG.sbert_output_file_path, [USER_EMBEDDINGS, USER_LABEL])
 
@@ -108,7 +110,8 @@ if __name__ == "__main__":
     if os.path.exists(CONFIG.personality_output_file_path):
         USER_EMBEDDINGS_PERSONALITY = read_pickle(CONFIG.personality_output_file_path)
     else:
-        PERSONALITY_MODEL = personality_classofier.load_from_checkpoint(PERSONALITY_MODEL_PATH)
+        PERSONALITY_MODEL = personality_classofier.load_from_checkpoint(PERSONALITY_MODEL_PATH, map_location="cuda:0")
+        PERSONALITY_MODEL = PERSONALITY_MODEL.to("cuda:0")
         PERSONALITY_MODEL.eval()
         USER_EMBEDDINGS_PERSONALITY, _ = create_user_embedding_personality(DATA,
                                                                            PERSONALITY_MODEL,
@@ -121,7 +124,8 @@ if __name__ == "__main__":
     if os.path.exists(CONFIG.myirony_output_file_path):
         USER_EMBEDDINGS_MYIRONY = read_pickle(CONFIG.myirony_output_file_path)
     else:
-        MYIRONY_MODEL = irony_classofier.load_from_checkpoint(MYIRONY_MODEL_PATH)
+        MYIRONY_MODEL = irony_classofier.load_from_checkpoint(MYIRONY_MODEL_PATH, map_location="cuda:0")
+        MYIRONY_MODEL = MYIRONY_MODEL.to("cuda:0")
         MYIRONY_MODEL.eval()
         USER_EMBEDDINGS_MYIRONY, _ = create_user_embedding_personality(DATA,
                                                                        MYIRONY_MODEL,
@@ -134,7 +138,9 @@ if __name__ == "__main__":
     if os.path.exists(CONFIG.emotion_output_file_path):
         USER_EMBEDDINGS_EMOTION = read_pickle(CONFIG.emotion_output_file_path)
     else:
-        EMOTION_MODEL = irony_classofier.load_from_checkpoint(EMOTION_MODEL_PATH)
+        EMOTION_MODEL = irony_classofier.load_from_checkpoint(EMOTION_MODEL_PATH, map_location="cuda:0")
+        EMOTION_MODEL = EMOTION_MODEL.to("cuda:0")
+
         EMOTION_MODEL.eval()
         USER_EMBEDDINGS_EMOTION, _ = create_user_embedding_personality(DATA,
                                                                        EMOTION_MODEL,
@@ -145,13 +151,18 @@ if __name__ == "__main__":
     logging.debug("Create emotion user embeddings")
 
     # ----------------------------- Train SVM -----------------------------
+    USER_EMBEDDINGS = np.squeeze(USER_EMBEDDINGS)
+    USER_EMBEDDINGS_MYIRONY = np.squeeze(USER_EMBEDDINGS_MYIRONY)
+    USER_EMBEDDINGS_EMOTION = np.squeeze(USER_EMBEDDINGS_EMOTION)
+    USER_EMBEDDINGS_PERSONALITY = np.squeeze(USER_EMBEDDINGS_PERSONALITY)
+
     FEATURES = list(np.concatenate([USER_EMBEDDINGS,
-                                    USER_EMBEDDINGS_MYIRONY,
+                                    # USER_EMBEDDINGS_MYIRONY,
                                     USER_EMBEDDINGS_EMOTION,
-                                    USER_EMBEDDINGS_PERSONALITY
+                                    # USER_EMBEDDINGS_PERSONALITY
                                     ], axis=1))
 
-    CLF = GradientBoostingClassifier()#learning_rate=0.2, max_depth=3)#, n_estimators=50)
+    CLF = GradientBoostingClassifier()  # learning_rate=0.2, max_depth=3)#, n_estimators=50)
     # CLF = svm.SVC()
     # CLF.fit(FEATURES[:200], INDEXED_TARGET[:200])
 

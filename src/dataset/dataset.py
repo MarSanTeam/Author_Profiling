@@ -80,15 +80,10 @@ class InferenceDataset(CustomDataset):
     """
     dataset to inference  data from model checkpoint
     """
-
-    def __init__(self, data: dict, tokenizer, max_len):
-        super(InferenceDataset, self).__init__(data, tokenizer, max_len)
-
     def __getitem__(self, item_index):
         text = super(InferenceDataset, self).__getitem__(item_index)
 
         batch = self.single_data_tokenizer(text)
-
         input_ids = batch.input_ids.flatten()
 
         return {"input_ids": input_ids}

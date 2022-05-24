@@ -9,6 +9,9 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
 import xml.etree.cElementTree as ET
 
+from dataset import InferenceDataset
+from torch.utils.data import DataLoader
+
 
 def create_user_embedding(data, lm_model, tokenizer) -> [list, list]:
     """
@@ -33,7 +36,7 @@ def create_user_embedding(data, lm_model, tokenizer) -> [list, list]:
         with torch.no_grad():
             output = lm_model(author_tweets).pooler_output
             # print(output.size())
-            output = torch.max(output, 0)
+            output = torch.mean(output, 0)
             # print(output.size())
             user_embeddings.append(output.cpu().numpy())
             user_label.append(author_label)
@@ -51,7 +54,7 @@ def create_user_embedding_sbert(data, model) -> [list, list]:
     user_embeddings, user_label = [], []
     for author_tweets, author_label in data:
         embeddings = model.encode(author_tweets)
-        avg_embeddings = np.max(embeddings, axis=0)
+        avg_embeddings = np.mean(embeddings, axis=0)
         user_embeddings.append(avg_embeddings)
         user_label.append(author_label)
     return user_embeddings, user_label
@@ -74,7 +77,7 @@ def create_user_embedding_irony(data: List[list], model, tokenizer) -> [list, li
             output = model(**tweet)
             score = torch.nn.Softmax(dim=1)(output[0])
             scores.append(score[0].detach().numpy())
-        avg_embeddings = np.max(scores, axis=0)
+        avg_embeddings = np.mean(scores, axis=0)
         user_embeddings.append(avg_embeddings)
         user_label.append(author_label)
     return user_embeddings, user_label
@@ -101,6 +104,33 @@ def create_user_embedding_personality(data: List[list], model, tokenizer, max_le
         output = model(author_tweets)
         output = torch.max(output[-1], dim=0)
         output = output[0].detach().tolist()
+        user_embeddings.append(output)
+        user_label.append(author_label)
+
+    return user_embeddings, user_label
+
+
+def create_user_embedding_personality_1(data: List[list], model, tokenizer, max_len) -> [list, list]:
+    """
+
+    :param data:
+    :param model:
+    :param tokenizer:
+    :param max_len:
+    :return:
+    """
+    user_embeddings, user_label = [], []
+
+    for author_tweets, author_label in data:
+        pred = []
+        dataset = InferenceDataset(data={"texts": author_tweets}, tokenizer=tokenizer, max_len=max_len)
+        dataloader = DataLoader(dataset, batch_size=1,
+                                shuffle=False, num_workers=4)
+        for i_batch, sample_batched in enumerate(dataloader):
+            sample_batched["input_ids"] = sample_batched["input_ids"].to("cuda:0")
+            output = model(sample_batched)
+            pred.append(output[-1].cpu().detach().numpy())
+        output = np.mean(pred, axis=0)
         user_embeddings.append(output)
         user_label.append(author_label)
 
