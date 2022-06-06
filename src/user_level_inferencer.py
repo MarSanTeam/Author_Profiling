@@ -19,10 +19,12 @@ from transformers import AutoModelForSequenceClassification, AutoTokenizer, T5To
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics import f1_score
 import logging
+import random
 import itertools
 from sklearn.model_selection import ShuffleSplit
 from sklearn.model_selection import cross_val_score
 from sklearn import metrics
+from sklearn.metrics import accuracy_score
 
 from configuration import BaseConfig
 from data_prepration import prepare_ap_data, create_author_label
@@ -157,25 +159,30 @@ if __name__ == "__main__":
     USER_EMBEDDINGS_PERSONALITY = np.squeeze(USER_EMBEDDINGS_PERSONALITY)
 
     FEATURES = list(np.concatenate([USER_EMBEDDINGS,
-                                    # USER_EMBEDDINGS_MYIRONY,
+                                    USER_EMBEDDINGS_MYIRONY,
                                     USER_EMBEDDINGS_EMOTION,
-                                    # USER_EMBEDDINGS_PERSONALITY
+                                    USER_EMBEDDINGS_PERSONALITY
                                     ], axis=1))
+    # c = list(zip(FEATURES, INDEXED_TARGET))
+    #
+    # random.shuffle(c)
+    #
+    # FEATURES, INDEXED_TARGET = zip(*c)
 
     CLF = GradientBoostingClassifier()  # learning_rate=0.2, max_depth=3)#, n_estimators=50)
     # CLF = svm.SVC()
-    # CLF.fit(FEATURES[:200], INDEXED_TARGET[:200])
+    CLF.fit(FEATURES, INDEXED_TARGET)
 
-    SCORES, CI = cross_validator(CLF, FEATURES, INDEXED_TARGET, cv=5)
-    print("%0.4f accuracy with a standard "
-          "deviation of %0.4f" % (SCORES.mean(), SCORES.std()))
-    print("%0.4f ci with a standard "
-          "deviation of %0.4f" % (CI.mean(), CI.std()))
-    SCORES, CI = cross_validator(CLF, FEATURES, INDEXED_TARGET, cv=10)
-    print("%0.4f accuracy with a standard "
-          "deviation of %0.4f" % (SCORES.mean(), SCORES.std()))
-    print("%0.4f ci with a standard "
-          "deviation of %0.4f" % (CI.mean(), CI.std()))
+    # SCORES, CI = cross_validator(CLF, FEATURES, INDEXED_TARGET, cv=5)
+    # print("%0.4f accuracy with a standard "
+    #       "deviation of %0.4f" % (SCORES.mean(), SCORES.std()))
+    # print("%0.4f ci with a standard "
+    #       "deviation of %0.4f" % (CI.mean(), CI.std()))
+    # SCORES, CI = cross_validator(CLF, FEATURES, INDEXED_TARGET, cv=10)
+    # print("%0.4f accuracy with a standard "
+    #       "deviation of %0.4f" % (SCORES.mean(), SCORES.std()))
+    # print("%0.4f ci with a standard "
+    #       "deviation of %0.4f" % (CI.mean(), CI.std()))
 # SCORES = cross_val_score(CLF, FEATURES, INDEXED_TARGET, cv=5)
 # print(SCORES)
 # print(CI)
@@ -185,12 +192,17 @@ if __name__ == "__main__":
 # print(CI/5)
 #
 
+    # y_true = CLF.predict(FEATURES[-80:])
+    # print(accuracy_score(y_true, INDEXED_TARGET[-80:]))
+    filename = "finalized_model_new.sav"
+    pickle.dump(CLF, open(filename, "wb"))
 
-# filename = "finalized_model.sav"
-# pickle.dump(CLF, open(filename, "wb"))
-#
-# loaded_model = pickle.load(open(filename, 'rb'))
-# result = loaded_model.score(FEATURES[-10:], INDEXED_TARGET[-10:])
+    loaded_model = pickle.load(open(filename, 'rb'))
+    result = loaded_model.predict(FEATURES[-80:])#, INDEXED_TARGET[-80:])
+    print(result)
+    print(INDEXED_TARGET[-80:])
+    print(accuracy_score(result, INDEXED_TARGET[-80:]))
+
 # print(result)
 
 # TRAIN_F1SCORE_MACRO = f1_score(TRAIN_INDEXED_TARGET, TRAIN_PREDICTED_TARGETS, average="macro")

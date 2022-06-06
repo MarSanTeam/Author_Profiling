@@ -7,7 +7,7 @@ from transformers import T5Tokenizer
 import logging
 
 from configuration import BaseConfig
-from data_loader import write_pickle
+from data_loader import write_pickle, read_pickle
 from data_prepration import prepare_ap_data
 from utils import create_user_embedding_sbert, save_output, \
     create_user_embedding_irony, create_user_embedding_personality, calculate_confidence_interval
@@ -56,34 +56,55 @@ if __name__ == "__main__":
     EMOTION_MODEL.eval()
     logging.debug("Emotion model was loaded")
 
-    USER_EMBEDDINGS, USER_ID = create_user_embedding_sbert(DATA, SBERT)
-    logging.debug("User contextual embedding was created")
+    if os.path.exists("../assets/user_embeddings_test.pkl"):
+        USER_EMBEDDINGS, USER_ID = read_pickle("../assets/user_embeddings_test.pkl")
+        logging.debug("User contextual embedding was loaded")
 
-    USER_EMBEDDINGS_PERSONALITY, _ = create_user_embedding_personality(DATA,
-                                                                       PERSONALITY_MODEL,
+    else:
+        USER_EMBEDDINGS, USER_ID = create_user_embedding_sbert(DATA, SBERT)
+        write_pickle("../assets/user_embeddings_test.pkl", [USER_EMBEDDINGS, USER_ID])
+        logging.debug("User contextual embedding was created")
+
+    if os.path.exists("../assets/personality_embeddings_test.pkl"):
+        USER_EMBEDDINGS_PERSONALITY = read_pickle("../assets/personality_embeddings_test.pkl")
+        logging.debug("User personality embedding was loaded")
+    else:
+        USER_EMBEDDINGS_PERSONALITY, _ = create_user_embedding_personality(DATA,
+                                                                           PERSONALITY_MODEL,
+                                                                           PERSONALITY_TOKENIZER,
+                                                                           CONFIG.max_len)
+        logging.debug("User personality embedding was created")
+        write_pickle("../assets/personality_embeddings_test.pkl", USER_EMBEDDINGS_PERSONALITY)
+
+    if os.path.exists("../assets/irony_embeddings_test.pkl"):
+        USER_EMBEDDINGS_IRONY = read_pickle("../assets/irony_embeddings_test.pkl")
+        logging.debug("User irony embedding was loaded")
+    else:
+        USER_EMBEDDINGS_IRONY, _ = create_user_embedding_personality(DATA,
+                                                                     IRONY_MODEL,
+                                                                     PERSONALITY_TOKENIZER,
+                                                                     CONFIG.max_len)
+        logging.debug("User irony embedding was created")
+        write_pickle("../assets/irony_embeddings_test.pkl", USER_EMBEDDINGS_IRONY)
+
+    if os.path.exists("../assets/emotion_embeddings_test.pkl"):
+        USER_EMBEDDINGS_EMOTION = read_pickle("../assets/emotion_embeddings_test.pkl")
+        logging.debug("User emotion embedding was loaded")
+    else:
+        USER_EMBEDDINGS_EMOTION, _ = create_user_embedding_personality(DATA,
+                                                                       EMOTION_MODEL,
                                                                        PERSONALITY_TOKENIZER,
                                                                        CONFIG.max_len)
-    logging.debug("User personality embedding was created")
+        logging.debug("User emotion embedding was created")
+        write_pickle("../assets/emotion_embeddings_test.pkl", USER_EMBEDDINGS_EMOTION)
 
-    USER_EMBEDDINGS_IRONY, _ = create_user_embedding_personality(DATA,
-                                                                 IRONY_MODEL,
-                                                                 PERSONALITY_TOKENIZER,
-                                                                 CONFIG.max_len)
-    logging.debug("User irony embedding was created")
-
-    USER_EMBEDDINGS_EMOTION, _ = create_user_embedding_personality(DATA,
-                                                                   EMOTION_MODEL,
-                                                                   PERSONALITY_TOKENIZER,
-                                                                   CONFIG.max_len)
-    logging.debug("User emotion embedding was created")
-
-    my_data = [USER_EMBEDDINGS_EMOTION, USER_EMBEDDINGS_IRONY, USER_EMBEDDINGS_PERSONALITY, USER_EMBEDDINGS]
-    write_pickle(CONFIG.emotion_output_file_path, USER_EMBEDDINGS_EMOTION)
+    my_data = [USER_EMBEDDINGS, USER_EMBEDDINGS_IRONY, USER_EMBEDDINGS_EMOTION, USER_EMBEDDINGS_PERSONALITY, USER_ID]
+    write_pickle("../assets/test_data.pkl", my_data)
 
     FEATURES = list(np.concatenate([USER_EMBEDDINGS,
-                                    USER_EMBEDDINGS,
-                                    USER_EMBEDDINGS,
-                                    USER_EMBEDDINGS
+                                    USER_EMBEDDINGS_IRONY,
+                                    USER_EMBEDDINGS_EMOTION,
+                                    USER_EMBEDDINGS_PERSONALITY
                                     ], axis=1))
 
     MODEL_OUTPUTS = CLF.predict(FEATURES)
