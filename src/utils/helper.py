@@ -103,7 +103,10 @@ def create_user_embedding_personality(data: List[list], model, tokenizer, max_le
         # author_tweets = author_tweets.to("cuda:1")
         output = model(author_tweets)
         output = torch.mean(output[-1], dim=0)
-        output = output[0].detach().tolist()
+        print(output)
+        output = output.detach().tolist()
+        print(output)
+
         user_embeddings.append(output)
         user_label.append(author_label)
 
@@ -127,7 +130,7 @@ def create_user_embedding_personality_1(data: List[list], model, tokenizer, max_
         dataloader = DataLoader(dataset, batch_size=1,
                                 shuffle=False, num_workers=4)
         for i_batch, sample_batched in enumerate(dataloader):
-            sample_batched["input_ids"] = sample_batched["input_ids"].to("cuda:0")
+            sample_batched["input_ids"] = sample_batched["input_ids"].to("cuda:1")
             output = model(sample_batched)
             pred.append(output[-1].cpu().detach().numpy())
         output = np.mean(pred, axis=0)

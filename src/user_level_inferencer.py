@@ -154,6 +154,7 @@ if __name__ == "__main__":
 
     # ----------------------------- Train SVM -----------------------------
     USER_EMBEDDINGS = np.squeeze(USER_EMBEDDINGS)
+    print(np.shape(USER_EMBEDDINGS_MYIRONY))
     USER_EMBEDDINGS_MYIRONY = np.squeeze(USER_EMBEDDINGS_MYIRONY)
     USER_EMBEDDINGS_EMOTION = np.squeeze(USER_EMBEDDINGS_EMOTION)
     USER_EMBEDDINGS_PERSONALITY = np.squeeze(USER_EMBEDDINGS_PERSONALITY)
