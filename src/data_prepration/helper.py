@@ -1,3 +1,15 @@
+# -*- coding: utf-8 -*-
+# ========================================================
+
+"""
+    Author Profiling Project:
+        data_preparation:
+                helper.py
+"""
+
+
+# ============================ Third Party libs ============================
+
 def create_author_label(data: list) -> dict:
     """
 

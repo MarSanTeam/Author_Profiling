@@ -1,10 +1,12 @@
-# pylint: disable-msg=no-member
-# pylint: disable-msg=import-error
+# -*- coding: utf-8 -*-
+# ========================================================
+
 """
-    FAQ Project:
+    Author Profiling Project:
         models:
-            helper
+                helper.py
 """
+
 # ============================ Third Party libs ============================
 from pytorch_lightning.callbacks import ModelCheckpoint
 

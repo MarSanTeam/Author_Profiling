@@ -1,5 +1,4 @@
 """
-    FAQ Project:
-        Make the importing much shorter
+        Author Profiling Project:
 """
 from .helper import build_checkpoint_callback

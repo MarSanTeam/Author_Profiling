@@ -1,15 +1,18 @@
+# -*- coding: utf-8 -*-
+# ========================================================
+
 """
     Author Profiling Project:
         models:
-            t5_irony
+                t5_irony.py
 """
+
 # ============================ Third Party libs ============================
 import torch
 from torch import nn
 import pytorch_lightning as pl
 import torchmetrics
 from transformers import T5EncoderModel
-from models.transformers_block import EncoderLayer
 
 
 # ============================ My packages ============================
@@ -27,17 +30,11 @@ class Classifier(pl.LightningModule):
         self.f_score_total = torchmetrics.F1(average="weighted", num_classes=num_classes)
         self.max_len = max_len
         self.learning_rare = lr
-        self.class_weights=class_weights
+        self.class_weights = class_weights
 
         self.model = T5EncoderModel.from_pretrained(lm_path)
-        # transformer_input_dim = self.model.config.d_model
-        # self.enc_layer = EncoderLayer(hid_dim=transformer_input_dim,
-        #                               n_heads=8, pf_dim=transformer_input_dim * 2,
-        #                               dropout=0.2)
-
         self.classifier = nn.Linear(self.model.config.d_model, num_classes)
-
-        self.max_pool = nn.MaxPool1d(200)
+        self.max_pool = nn.MaxPool1d(self.max_len)
         self.dense = nn.Linear(self.model.config.d_model, self.model.config.d_model)
 
         self.loss = nn.CrossEntropyLoss(weight=torch.FloatTensor(self.class_weights))
@@ -46,8 +43,6 @@ class Classifier(pl.LightningModule):
     def forward(self, batch):
         inputs_ids = batch["input_ids"]
         output_encoder = self.model(inputs_ids).last_hidden_state.permute(0, 2, 1)
-        # enc_out = self.enc_layer(output_encoder, src_mask=output_encoder).permute(0, 2, 1)
-
         maxed_pool = self.max_pool(output_encoder).squeeze(2)
         dense = self.dense(maxed_pool)
         final_output = self.classifier(dense)

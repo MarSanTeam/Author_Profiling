@@ -1,16 +1,14 @@
-# pylint: disable-msg=too-few-public-methods
-# pylint: disable-msg=no-member
-# pylint: disable-msg=arguments-differ
+# -*- coding: utf-8 -*-
+# ========================================================
 
 """
-    AP Project:
-        models:
-            dataset
+    Author Profiling Project:
+        dataset:
+                dataset.py
 """
 
 # ============================ Third Party libs ============================
 from abc import ABC, abstractmethod
-
 import pytorch_lightning as pl
 import torch
 
@@ -18,36 +16,30 @@ import torch
 # ==========================================================================
 
 
-class CustomDataset(ABC, torch.utils.data.Dataset):
+class TweetLevelDataset(ABC, torch.utils.data.Dataset):
     """
-        CustomDataset is a abstract class
+        TweetLevelDataset
     """
 
     def __init__(self, data: dict, tokenizer, max_len: int):
         self.texts = data["texts"]
-        self.targets = None
         if "targets" in data:
             self.targets = data["targets"]
+        else:
+            self.targets = None
         self.tokenizer = tokenizer
         self.max_len = max_len
 
     def __len__(self):
         return len(self.texts)
 
-    @abstractmethod
     def __getitem__(self, item_index):
         """
 
         :param item_index:
         :return:
         """
-        texts = self.texts[item_index]
-        if self.targets:
-            target = self.targets[item_index]
-            return texts, target
-        return texts
-
-    def single_data_tokenizer(self, text):
+        text = self.texts[item_index]
         batch = self.tokenizer.encode_plus(text=text,
                                            add_special_tokens=True,
                                            max_length=self.max_len,
@@ -55,38 +47,11 @@ class CustomDataset(ABC, torch.utils.data.Dataset):
                                            padding="max_length",
                                            truncation=True,
                                            return_token_type_ids=True)
-        return batch
-
-
-class LMDataset(CustomDataset):
-    """
-        SeparateDataset
-    """
-
-    def __init__(self, data: dict, tokenizer, max_len: int):
-        super().__init__(data, tokenizer, max_len)
-
-    def __getitem__(self, item_index):
-        texts, target = super(LMDataset, self).__getitem__(item_index)
-        texts = self.single_data_tokenizer(texts)
-
-        texts = texts.input_ids.flatten()
-
-        return {"texts": texts,
-                "targets": torch.tensor(target)}
-
-
-class InferenceDataset(CustomDataset):
-    """
-    dataset to inference  data from model checkpoint
-    """
-    def __getitem__(self, item_index):
-        text = super(InferenceDataset, self).__getitem__(item_index)
-
-        batch = self.single_data_tokenizer(text)
-        input_ids = batch.input_ids.flatten()
-
-        return {"input_ids": input_ids}
+        if self.targets:
+            target = self.targets[item_index]
+            return {"input_ids": batch.input_ids.flatten(),
+                    "targets": torch.tensor(target)}
+        return {"input_ids": batch.input_ids.flatten()}
 
 
 class DataModule(pl.LightningDataModule):
@@ -102,16 +67,16 @@ class DataModule(pl.LightningDataModule):
         self.tokenizer = tokenizer
         self.customs_dataset = {}
 
-    def setup(self):
-        self.customs_dataset["train_dataset"] = InferenceDataset(
+    def setup(self, stage=None):
+        self.customs_dataset["train_dataset"] = TweetLevelDataset(
             data=self.data["train_data"], tokenizer=self.tokenizer, max_len=self.config.max_len
         )
 
-        self.customs_dataset["val_dataset"] = InferenceDataset(
+        self.customs_dataset["val_dataset"] = TweetLevelDataset(
             data=self.data["val_data"], tokenizer=self.tokenizer, max_len=self.config.max_len
         )
 
-        self.customs_dataset["test_dataset"] = InferenceDataset(
+        self.customs_dataset["test_dataset"] = TweetLevelDataset(
             data=self.data["test_data"], tokenizer=self.tokenizer, max_len=self.config.max_len
         )
 

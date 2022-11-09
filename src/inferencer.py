@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+# ========================================================
+
+"""
+    Author Profiling Project:
+        configuration:
+                config.py
+"""
+
+# ============================ Third Party libs ============================
 import os
 import pickle
 import numpy as np
@@ -38,7 +48,7 @@ if __name__ == "__main__":
                                 "pan22-author-profiling-test-2022-04-22-without_truth/en/")
     logging.debug("Dataset was loaded")
 
-    PERSONALITY_TOKENIZER = T5Tokenizer.from_pretrained(CONFIG.language_model_tokenizer_path)
+    PERSONALITY_TOKENIZER = T5Tokenizer.from_pretrained(CONFIG.language_model_path)
     logging.debug("T5 Tokenizer was loaded")
 
     SBERT = SentenceTransformer(CONFIG.sentence_transformers_path, device="cuda:0")

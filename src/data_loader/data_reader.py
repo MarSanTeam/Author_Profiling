@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-# pylint: disable-msg=import-error
 # ========================================================
+
 """
-    FAQ Project:
-        data loader:
-            loading data
+    Author Profiling Project:
+        data_loader:
+                data_reader.py
 """
 
 # ============================ Third Party libs ============================

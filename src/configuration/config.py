@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
-# pylint: disable-msg=too-few-public-methods
-# ========================================================
-"""config module is written for write parameters."""
 # ========================================================
 
+"""
+    Author Profiling Project:
+        configuration:
+                config.py
+"""
 
-# ========================================================
-# Imports
-# ========================================================
-
+# ============================ Third Party libs ============================
 import argparse
 from pathlib import Path
 
+
+# ========================================================
 
 class BaseConfig:
     """
@@ -20,7 +21,7 @@ class BaseConfig:
 
     def __init__(self):
         self.parser = argparse.ArgumentParser()
-        self.parser.add_argument("--model_name", type=str, default="BERT_Large")
+        self.parser.add_argument("--model_name", type=str, default="T5_Large")
 
         self.parser.add_argument("--raw_data_dir", type=str,
                                  default=Path(__file__).parents[2].__str__() + "/data/Raw/en")
@@ -32,23 +33,11 @@ class BaseConfig:
                                  default=Path(__file__).parents[2].__str__() + "/assets/")
 
         self.parser.add_argument("--saved_model_path", type=str,
-                                 default=Path(__file__).parents[2].__str__() + "/assets/saved_models/"),
+                                 default=Path(__file__).parents[
+                                             2].__str__() + "/assets/saved_models/"),
 
         self.parser.add_argument("--language_model_path", type=str,
-                                 default="/home/ehsan.tavan/LanguageModels/bert_large_uncased",
-                                 help="Path of the multilingual lm model dir")
-        self.parser.add_argument("--language_model_tokenizer_path", type=str,
-                                 default=Path(__file__).parents[3].__str__()
-                                         + "/LanguageModels/t5_en_large")
-        self.parser.add_argument("--sentence_transformers_path", type=str,
-                                 default=Path(__file__).parents[3].__str__()
-                                         + "/LanguageModels/sentence_transformers/stsb-bert-large/")
-        self.parser.add_argument("--roberta_base_irony_model_path", type=str,
-                                 default=Path(__file__).parents[3].__str__()
-                                         + "/LanguageModels/twitter-roberta-base-irony")
-        self.parser.add_argument("--sbert_output_file_path", type=str,
-                                 default=Path(__file__).parents[2].__str__()
-                                         + "/assets/sbert_mean1.pkl")
+                                 default="/home/LanguageModels/t5_en_large")
 
         self.parser.add_argument("--irony_output_file_path", type=str,
                                  default=Path(__file__).parents[2].__str__()
@@ -70,8 +59,8 @@ class BaseConfig:
         self.parser.add_argument("--truth_data", type=str, default="truth.txt")
 
         self.parser.add_argument("--train_data", type=str, default="train_tweet_level.csv")
-        self.parser.add_argument("--test_data", type=str, default="test_tweet_level.csv")
         self.parser.add_argument("--val_data", type=str, default="val_tweet_level.csv")
+        self.parser.add_argument("--test_data", type=str, default="test_tweet_level.csv")
 
         self.parser.add_argument("--data_headers", type=list, default=["tweets", "labels"])
         self.parser.add_argument("--customized_headers", type=list, default=["texts", "targets"])
@@ -83,7 +72,7 @@ class BaseConfig:
                                  help="...")
 
         self.parser.add_argument("--max_len", type=int,
-                                 default=200,
+                                 default=2,
                                  help="...")
 
         self.parser.add_argument("--n_epochs", type=int,
@@ -91,32 +80,14 @@ class BaseConfig:
                                  help="...")
 
         self.parser.add_argument("--batch_size", type=int,
-                                 default=64,
+                                 default=1,
                                  help="...")
 
         self.parser.add_argument("--lr", default=2e-5,
                                  help="...")
 
-        self.parser.add_argument("--lstm_units", type=int,
-                                 default=128,
-                                 help="...")
-        self.parser.add_argument("--lstm_layers", type=int,
-                                 default=2,
-                                 help="...")
-        self.parser.add_argument("--bidirectional", type=bool,
-                                 default=True,
-                                 help="...")
         self.parser.add_argument("--dropout", type=float,
                                  default=0.15,
-                                 help="...")
-        self.parser.add_argument("--embedding_dim", type=int,
-                                 default=256,
-                                 help="...")
-        self.parser.add_argument("--alpha", type=float,
-                                 default=50.0,
-                                 help="...")
-        self.parser.add_argument("--alpha_warmup_ratio", type=float,
-                                 default=0.1,
                                  help="...")
 
     def get_config(self):

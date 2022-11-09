@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+# ========================================================
+
 """
-    AV Project:
-        data preparation:
-            indexer
+    Author Profiling Project:
+        indexer:
+                indexer.py
 """
+
 # ============================ Third Party libs ============================
 import os
 from abc import abstractmethod
