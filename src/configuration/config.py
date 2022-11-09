@@ -10,6 +10,7 @@
 # ============================ Third Party libs ============================
 import argparse
 from pathlib import Path
+import torch
 
 
 # ========================================================
@@ -89,6 +90,8 @@ class BaseConfig:
         self.parser.add_argument("--dropout", type=float,
                                  default=0.15,
                                  help="...")
+        self.parser.add_argument("--device", type=str, default=torch.device(
+            "cuda:0" if torch.cuda.is_available() else "cpu"), help="")
 
     def get_config(self):
         """
