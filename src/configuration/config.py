@@ -63,6 +63,11 @@ class BaseConfig:
         self.parser.add_argument("--val_data", type=str, default="val_tweet_level.csv")
         self.parser.add_argument("--test_data", type=str, default="test_tweet_level.csv")
 
+        self.parser.add_argument("--test_data_path", type=str,
+                                 default="../data/Raw/pan22-author-profiling-test-2022-04-22/"
+                                         "pan22-author-profiling-test-2022-04-22-without_truth/en/")
+        self.parser.add_argument("--output_path", type=str, default="../data/output/")
+
         self.parser.add_argument("--data_headers", type=list, default=["tweets", "labels"])
         self.parser.add_argument("--customized_headers", type=list, default=["texts", "targets"])
 

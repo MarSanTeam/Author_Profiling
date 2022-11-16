@@ -22,11 +22,11 @@ from sklearn.metrics import accuracy_score
 # ============================ My packages ============================
 from configuration import BaseConfig
 from data_loader import read_pickle, write_pickle
-from utils import create_user_embedding_sbert, \
-    create_user_embedding_personality
+from utils import create_sbert_user_embedding, \
+    create_user_embedding
 from indexer import Indexer
 from models.t5_personality import Classifier as PersonalityClassifier
-from models.t5_irony import Classifier as Classifier
+from models.t5_irony import Classifier as IronyClassifier
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -45,7 +45,7 @@ if __name__ == "__main__":
         CONFIG.assets_dir, "emotion/checkpoints/QTag-epoch=13-val_loss=0.45.ckpt")
 
     # ------------------------------ create LM Tokenizer instance-------------------
-    TOKENIZER = T5Tokenizer.from_pretrained(CONFIG.roberta_base_irony_model_path)
+    TOKENIZER = T5Tokenizer.from_pretrained(CONFIG.language_model_path)
 
     # ---------------------------------- Loading data ------------------------------
 
@@ -78,9 +78,7 @@ if __name__ == "__main__":
     else:
         logging.debug("Create Sbert user embeddings")
         MODEL = SentenceTransformer(CONFIG.sentence_transformers_path, device=CONFIG.device)
-        MODEL = MODEL.to(CONFIG.device)
-
-        SBERT_USER_EMBEDDINGS, USER_LABEL = create_user_embedding_sbert(DATA, MODEL)
+        SBERT_USER_EMBEDDINGS, USER_LABEL = create_sbert_user_embedding(DATA, MODEL)
         write_pickle(CONFIG.sbert_output_file_path, [SBERT_USER_EMBEDDINGS, USER_LABEL])
 
     # if os.path.exists(CONFIG.irony_output_file_path):
@@ -99,10 +97,10 @@ if __name__ == "__main__":
         PERSONALITY_MODEL = PersonalityClassifier.load_from_checkpoint(PERSONALITY_MODEL_PATH,
                                                                        map_location=CONFIG.device)
         PERSONALITY_MODEL.eval()
-        PERSONALITY_USER_EMBEDDINGS, _ = create_user_embedding_personality(DATA,
-                                                                           PERSONALITY_MODEL,
-                                                                           TOKENIZER,
-                                                                           CONFIG.max_len)
+        PERSONALITY_USER_EMBEDDINGS, _ = create_user_embedding(DATA,
+                                                               PERSONALITY_MODEL,
+                                                               TOKENIZER,
+                                                               CONFIG.max_len)
         write_pickle(CONFIG.personality_output_file_path, PERSONALITY_USER_EMBEDDINGS)
 
     if os.path.exists(CONFIG.irony_output_file_path):
@@ -110,13 +108,13 @@ if __name__ == "__main__":
         IRONY_USER_EMBEDDINGS = read_pickle(CONFIG.myirony_output_file_path)
     else:
         logging.debug("Create irony user embeddings")
-        IRONY_MODEL = Classifier.load_from_checkpoint(IRONY_MODEL_PATH,
-                                                      map_location=CONFIG.device)
+        IRONY_MODEL = IronyClassifier.load_from_checkpoint(IRONY_MODEL_PATH,
+                                                           map_location=CONFIG.device)
         IRONY_MODEL.eval()
-        IRONY_USER_EMBEDDINGS, _ = create_user_embedding_personality(DATA,
-                                                                     IRONY_MODEL,
-                                                                     TOKENIZER,
-                                                                     CONFIG.max_len)
+        IRONY_USER_EMBEDDINGS, _ = create_user_embedding(DATA,
+                                                         IRONY_MODEL,
+                                                         TOKENIZER,
+                                                         CONFIG.max_len)
         write_pickle(CONFIG.irony_output_file_path, IRONY_USER_EMBEDDINGS)
 
     if os.path.exists(CONFIG.emotion_output_file_path):
@@ -124,13 +122,13 @@ if __name__ == "__main__":
         EMOTION_USER_EMBEDDINGS = read_pickle(CONFIG.emotion_output_file_path)
     else:
         logging.debug("Create emotion user embeddings")
-        EMOTION_MODEL = Classifier.load_from_checkpoint(EMOTION_MODEL_PATH,
-                                                        map_location=CONFIG.device)
+        EMOTION_MODEL = IronyClassifier.load_from_checkpoint(EMOTION_MODEL_PATH,
+                                                             map_location=CONFIG.device)
         EMOTION_MODEL.eval()
-        EMOTION_USER_EMBEDDINGS, _ = create_user_embedding_personality(DATA,
-                                                                       EMOTION_MODEL,
-                                                                       TOKENIZER,
-                                                                       CONFIG.max_len)
+        EMOTION_USER_EMBEDDINGS, _ = create_user_embedding(DATA,
+                                                           EMOTION_MODEL,
+                                                           TOKENIZER,
+                                                           CONFIG.max_len)
         write_pickle(CONFIG.emotion_output_file_path, EMOTION_USER_EMBEDDINGS)
 
     # ----------------------------- Train SVM -----------------------------

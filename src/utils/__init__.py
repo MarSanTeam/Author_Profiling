@@ -1,7 +1,5 @@
 """
         Author Profiling Project:
 """
-from .helper import create_user_embedding, create_user_embedding_sbert,\
-    create_user_embedding_irony, create_user_embedding_personality,\
-    calculate_confidence_interval, cross_validator, save_output, \
-    create_user_embedding_personality_1
+from .helper import create_user_embedding, create_sbert_user_embedding, create_user_embedding, \
+    calculate_confidence_interval, cross_validator, save_output
