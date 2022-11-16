@@ -22,8 +22,8 @@ from sklearn.metrics import accuracy_score
 # ============================ My packages ============================
 from configuration import BaseConfig
 from data_loader import read_pickle, write_pickle
-from utils import create_sbert_user_embedding, \
-    create_user_embedding
+from utils import create_sbert_user_embedding, create_user_embedding, cross_validator, \
+    calculate_confidence_interval
 from indexer import Indexer
 from models.t5_personality import Classifier as PersonalityClassifier
 from models.t5_irony import Classifier as IronyClassifier
@@ -80,14 +80,6 @@ if __name__ == "__main__":
         MODEL = SentenceTransformer(CONFIG.sentence_transformers_path, device=CONFIG.device)
         SBERT_USER_EMBEDDINGS, USER_LABEL = create_sbert_user_embedding(DATA, MODEL)
         write_pickle(CONFIG.sbert_output_file_path, [SBERT_USER_EMBEDDINGS, USER_LABEL])
-
-    # if os.path.exists(CONFIG.irony_output_file_path):
-    #     USER_EMBEDDINGS_IRONY = read_pickle(CONFIG.irony_output_file_path)
-    # else:
-    #     USER_EMBEDDINGS_IRONY, _ = create_user_embedding_irony(DATA, IRONY_MODEL, IRONY_TOKENIZER)
-    #     write_pickle(CONFIG.irony_output_file_path, USER_EMBEDDINGS_IRONY)
-    #
-    # logging.debug("Create irony user embeddings")
 
     if os.path.exists(CONFIG.personality_output_file_path):
         logging.debug("Load personality user embeddings")
@@ -149,50 +141,11 @@ if __name__ == "__main__":
     CLF = GradientBoostingClassifier()
     CLF.fit(FEATURES, INDEXED_TARGET)
 
-    # SCORES, CI = cross_validator(CLF, FEATURES, INDEXED_TARGET, cv=5)
-    # print("%0.4f accuracy with a standard "
-    #       "deviation of %0.4f" % (SCORES.mean(), SCORES.std()))
-    # print("%0.4f ci with a standard "
-    #       "deviation of %0.4f" % (CI.mean(), CI.std()))
-    # SCORES, CI = cross_validator(CLF, FEATURES, INDEXED_TARGET, cv=10)
-    # print("%0.4f accuracy with a standard "
-    #       "deviation of %0.4f" % (SCORES.mean(), SCORES.std()))
-    # print("%0.4f ci with a standard "
-    #       "deviation of %0.4f" % (CI.mean(), CI.std()))
-    # SCORES = cross_val_score(CLF, FEATURES, INDEXED_TARGET, cv=5)
-    # print(SCORES)
-    # print(CI)
-    # CI = 0
-    # for s in SCORES:
-    #     CI += calculate_confidence_interval(s, len(FEATURES)//5, 95)
-    # print(CI/5)
-    #
-
-    # y_true = CLF.predict(FEATURES[-80:])
-    # print(accuracy_score(y_true, INDEXED_TARGET[-80:]))
-    filename = "finalized_model_new.sav"
-    pickle.dump(CLF, open(filename, "wb"))
-
-    loaded_model = pickle.load(open(filename, 'rb'))
-    result = loaded_model.predict(FEATURES[-80:])  # , INDEXED_TARGET[-80:])
-    print(result)
-    print(INDEXED_TARGET[-80:])
-    print(accuracy_score(result, INDEXED_TARGET[-80:]))
-
-    # print(result)
-
-    # TRAIN_F1SCORE_MACRO = f1_score(TRAIN_INDEXED_TARGET, TRAIN_PREDICTED_TARGETS, average="macro")
-    # VAL_F1SCORE_MACRO = f1_score(VAL_INDEXED_TARGET, VAL_PREDICTED_TARGETS, average="macro")
-    # TEST_F1SCORE_MACRO = f1_score(TEST_INDEXED_TARGET, TEST_PREDICTED_TARGETS, average="macro")
-    #
-    # logging.debug(f"Train macro F1 score is : {TRAIN_F1SCORE_MACRO * 100:0.2f}")
-    # logging.debug(f"Val macro F1 score is : {VAL_F1SCORE_MACRO * 100:0.2f}")
-    # logging.debug(f"Test macro F1 score is : {TEST_F1SCORE_MACRO * 100:0.2f}")
-    #
-    # TRAIN_F1SCORE_MICRO = f1_score(TRAIN_INDEXED_TARGET, TRAIN_PREDICTED_TARGETS, average="micro")
-    # VAL_F1SCORE_MICRO = f1_score(VAL_INDEXED_TARGET, VAL_PREDICTED_TARGETS, average="micro")
-    # TEST_F1SCORE_MICRO = f1_score(TEST_INDEXED_TARGET, TEST_PREDICTED_TARGETS, average="micro")
-    #
-    # logging.debug(f"Train micro F1 score is : {TRAIN_F1SCORE_MICRO * 100:0.2f}")
-    # logging.debug(f"Val micro F1 score is : {VAL_F1SCORE_MICRO * 100:0.2f}")
-    # logging.debug(f"Test micro F1 score is : {TEST_F1SCORE_MICRO * 100:0.2f}")
+    SCORES, CI = cross_validator(CLF, FEATURES, INDEXED_TARGET, cv=5)
+    logging.debug(
+        "%0.4f accuracy with a standard deviation of %0.4f" % (SCORES.mean(), SCORES.std()))
+    logging.debug("%0.4f ci with a standard deviation of %0.4f" % (CI.mean(), CI.std()))
+    SCORES, CI = cross_validator(CLF, FEATURES, INDEXED_TARGET, cv=10)
+    logging.debug(
+        "%0.4f accuracy with a standard deviation of %0.4f" % (SCORES.mean(), SCORES.std()))
+    logging.debug("%0.4f ci with a standard deviation of %0.4f" % (CI.mean(), CI.std()))

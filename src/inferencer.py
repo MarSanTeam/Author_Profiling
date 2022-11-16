@@ -9,13 +9,13 @@
 
 # ============================ Third Party libs ============================
 import os
+import logging
 import pickle
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from transformers import T5Tokenizer
 
-import logging
-
+# ============================ My packages ============================
 from configuration import BaseConfig
 from data_prepration import prepare_ap_data
 from utils import create_sbert_user_embedding, save_output, create_user_embedding
