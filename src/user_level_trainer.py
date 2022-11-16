@@ -60,74 +60,151 @@ if __name__ == "__main__":
                                                          len(TEST_DATA)))
 
     # ---------------------------------- Indexer ---------------------------------
-    TARGETS = [author_data[1] for author_data in DATA]
+    TRAIN_TARGETS = [author_data[1] for author_data in TRAIN_DATA]
+    VAL_TARGETS = [author_data[1] for author_data in VAL_DATA]
+    TEST_TARGETS = [author_data[1] for author_data in TEST_DATA]
 
-    TARGET_INDEXER = Indexer(vocabs=TARGETS)
+    TARGET_INDEXER = Indexer(vocabs=TRAIN_TARGETS)
     TARGET_INDEXER.build_vocab2idx()
     TARGET_INDEXER.save(path=CONFIG.assets_dir)
 
-    TARGETS_CONVENTIONAL = [[target] for target in TARGETS]
-    INDEXED_TARGET = TARGET_INDEXER.convert_samples_to_indexes(TARGETS_CONVENTIONAL)
-    INDEXED_TARGET = list(itertools.chain(*INDEXED_TARGET))
+    logging.debug("Create Indexer")
 
-    logging.debug("Create indexed target")
+    TRAIN_TARGETS_CONVENTIONAL = [[target] for target in TRAIN_TARGETS]
+    TRAIN_INDEXED_TARGET = TARGET_INDEXER.convert_samples_to_indexes(TRAIN_TARGETS_CONVENTIONAL)
+    TRAIN_INDEXED_TARGET = list(itertools.chain(*TRAIN_INDEXED_TARGET))
 
+    logging.debug("Create train indexed target")
+
+    VAL_TARGETS_CONVENTIONAL = [[target] for target in VAL_TARGETS]
+    VAL_INDEXED_TARGET = TARGET_INDEXER.convert_samples_to_indexes(VAL_TARGETS_CONVENTIONAL)
+    VAL_INDEXED_TARGET = list(itertools.chain(*VAL_INDEXED_TARGET))
+
+    logging.debug("Create validation indexed target")
+
+    TEST_TARGETS_CONVENTIONAL = [[target] for target in TEST_TARGETS]
+    TEST_INDEXED_TARGET = TARGET_INDEXER.convert_samples_to_indexes(TEST_TARGETS_CONVENTIONAL)
+    TEST_INDEXED_TARGET = list(itertools.chain(*TEST_INDEXED_TARGET))
+
+    logging.debug("Create test indexed target")
+
+    # ------------------------------ create User Embeddings -------------------
     if os.path.exists(CONFIG.sbert_output_file_path):
         logging.debug("Load Sbert user embeddings")
-        SBERT_USER_EMBEDDINGS, USER_LABEL = read_pickle(CONFIG.sbert_output_file_path)
+        TRAIN_DATA, VAL_DATA, TEST_DATA = read_pickle(CONFIG.sbert_output_file_path)
+        TRAIN_SBERT_USER_EMBEDDINGS, TRAIN_USER_LABEL = TRAIN_DATA[0], TRAIN_DATA[1]
+        VAL_SBERT_USER_EMBEDDINGS, VAL_USER_LABEL = VAL_DATA[0], VAL_DATA[1]
+        TEST_SBERT_USER_EMBEDDINGS, TEST_USER_LABEL = TEST_DATA[0], TEST_DATA[1]
     else:
         logging.debug("Create Sbert user embeddings")
         MODEL = SentenceTransformer(CONFIG.sentence_transformers_path, device=CONFIG.device)
-        SBERT_USER_EMBEDDINGS, USER_LABEL = create_sbert_user_embedding(DATA, MODEL)
-        write_pickle(CONFIG.sbert_output_file_path, [SBERT_USER_EMBEDDINGS, USER_LABEL])
+
+        TRAIN_SBERT_USER_EMBEDDINGS, TRAIN_USER_LABEL = create_sbert_user_embedding(TRAIN_DATA,
+                                                                                    MODEL)
+        logging.debug("Create train user embeddings")
+
+        VAL_SBERT_USER_EMBEDDINGS, VAL_USER_LABEL = create_sbert_user_embedding(VAL_DATA, MODEL)
+        logging.debug("Create validation user embeddings")
+
+        TEST_SBERT_USER_EMBEDDINGS, TEST_USER_LABEL = create_sbert_user_embedding(TEST_DATA, MODEL)
+        logging.debug("Create test user embeddings")
+
+        write_pickle(CONFIG.sbert_output_file_path,
+                     [[TRAIN_SBERT_USER_EMBEDDINGS, TRAIN_USER_LABEL],
+                      [VAL_SBERT_USER_EMBEDDINGS, VAL_USER_LABEL],
+                      [TEST_SBERT_USER_EMBEDDINGS, TEST_USER_LABEL]])
 
     if os.path.exists(CONFIG.personality_output_file_path):
         logging.debug("Load personality user embeddings")
-        PERSONALITY_USER_EMBEDDINGS = read_pickle(CONFIG.personality_output_file_path)
+        TRAIN_PERSONALITY_USER_EMBEDDINGS, VAL_PERSONALITY_USER_EMBEDDINGS, \
+            TEST_PERSONALITY_USER_EMBEDDINGS = read_pickle(CONFIG.personality_output_file_path)
     else:
         logging.debug("Create personality user embeddings")
         PERSONALITY_MODEL = PersonalityClassifier.load_from_checkpoint(PERSONALITY_MODEL_PATH,
                                                                        map_location=CONFIG.device)
         PERSONALITY_MODEL.eval()
-        PERSONALITY_USER_EMBEDDINGS, _ = create_user_embedding(DATA,
-                                                               PERSONALITY_MODEL,
-                                                               TOKENIZER,
-                                                               CONFIG.max_len)
-        write_pickle(CONFIG.personality_output_file_path, PERSONALITY_USER_EMBEDDINGS)
+        TRAIN_PERSONALITY_USER_EMBEDDINGS, _ = create_user_embedding(TRAIN_DATA,
+                                                                     PERSONALITY_MODEL,
+                                                                     TOKENIZER,
+                                                                     CONFIG.max_len)
+        VAL_PERSONALITY_USER_EMBEDDINGS, _ = create_user_embedding(VAL_DATA,
+                                                                   PERSONALITY_MODEL,
+                                                                   TOKENIZER,
+                                                                   CONFIG.max_len)
+        TEST_PERSONALITY_USER_EMBEDDINGS, _ = create_user_embedding(TEST_DATA,
+                                                                    PERSONALITY_MODEL,
+                                                                    TOKENIZER,
+                                                                    CONFIG.max_len)
+        write_pickle(CONFIG.personality_output_file_path,
+                     [TRAIN_PERSONALITY_USER_EMBEDDINGS, VAL_PERSONALITY_USER_EMBEDDINGS,
+                      TEST_PERSONALITY_USER_EMBEDDINGS])
 
     if os.path.exists(CONFIG.irony_output_file_path):
         logging.debug("Load irony user embeddings")
-        IRONY_USER_EMBEDDINGS = read_pickle(CONFIG.myirony_output_file_path)
+        TRAIN_IRONY_USER_EMBEDDINGS, VAL_IRONY_USER_EMBEDDINGS, TEST_IRONY_USER_EMBEDDINGS \
+            = read_pickle(CONFIG.myirony_output_file_path)
     else:
         logging.debug("Create irony user embeddings")
         IRONY_MODEL = IronyClassifier.load_from_checkpoint(IRONY_MODEL_PATH,
                                                            map_location=CONFIG.device)
         IRONY_MODEL.eval()
-        IRONY_USER_EMBEDDINGS, _ = create_user_embedding(DATA,
-                                                         IRONY_MODEL,
-                                                         TOKENIZER,
-                                                         CONFIG.max_len)
-        write_pickle(CONFIG.irony_output_file_path, IRONY_USER_EMBEDDINGS)
+        TRAIN_IRONY_USER_EMBEDDINGS, _ = create_user_embedding(TRAIN_DATA,
+                                                               IRONY_MODEL,
+                                                               TOKENIZER,
+                                                               CONFIG.max_len)
+        VAL_IRONY_USER_EMBEDDINGS, _ = create_user_embedding(VAL_DATA,
+                                                             IRONY_MODEL,
+                                                             TOKENIZER,
+                                                             CONFIG.max_len)
+        TEST_IRONY_USER_EMBEDDINGS, _ = create_user_embedding(TEST_DATA,
+                                                              IRONY_MODEL,
+                                                              TOKENIZER,
+                                                              CONFIG.max_len)
+        write_pickle(CONFIG.irony_output_file_path,
+                     [TRAIN_IRONY_USER_EMBEDDINGS, VAL_IRONY_USER_EMBEDDINGS,
+                      TEST_IRONY_USER_EMBEDDINGS])
 
     if os.path.exists(CONFIG.emotion_output_file_path):
         logging.debug("Load emotion user embeddings")
-        EMOTION_USER_EMBEDDINGS = read_pickle(CONFIG.emotion_output_file_path)
+        TRAIN_EMOTION_USER_EMBEDDINGS, VAL_EMOTION_USER_EMBEDDINGS, TEST_EMOTION_USER_EMBEDDINGS\
+            = read_pickle(CONFIG.emotion_output_file_path)
     else:
         logging.debug("Create emotion user embeddings")
         EMOTION_MODEL = IronyClassifier.load_from_checkpoint(EMOTION_MODEL_PATH,
                                                              map_location=CONFIG.device)
         EMOTION_MODEL.eval()
-        EMOTION_USER_EMBEDDINGS, _ = create_user_embedding(DATA,
-                                                           EMOTION_MODEL,
-                                                           TOKENIZER,
-                                                           CONFIG.max_len)
-        write_pickle(CONFIG.emotion_output_file_path, EMOTION_USER_EMBEDDINGS)
+        TRAIN_EMOTION_USER_EMBEDDINGS, _ = create_user_embedding(TRAIN_DATA,
+                                                                 EMOTION_MODEL,
+                                                                 TOKENIZER,
+                                                                 CONFIG.max_len)
+        VAL_EMOTION_USER_EMBEDDINGS, _ = create_user_embedding(VAL_DATA,
+                                                               EMOTION_MODEL,
+                                                               TOKENIZER,
+                                                               CONFIG.max_len)
+        TEST_EMOTION_USER_EMBEDDINGS, _ = create_user_embedding(TEST_DATA,
+                                                                EMOTION_MODEL,
+                                                                TOKENIZER,
+                                                                CONFIG.max_len)
+        write_pickle(CONFIG.emotion_output_file_path,
+                     [TRAIN_EMOTION_USER_EMBEDDINGS, VAL_EMOTION_USER_EMBEDDINGS,
+                      TEST_EMOTION_USER_EMBEDDINGS])
 
     # ----------------------------- Train SVM -----------------------------
-    SBERT_USER_EMBEDDINGS = np.squeeze(SBERT_USER_EMBEDDINGS)
-    IRONY_USER_EMBEDDINGS = np.squeeze(IRONY_USER_EMBEDDINGS)
-    EMOTION_USER_EMBEDDINGS = np.squeeze(EMOTION_USER_EMBEDDINGS)
-    PERSONALITY_USER_EMBEDDINGS = np.squeeze(PERSONALITY_USER_EMBEDDINGS)
+    TRAIN_SBERT_USER_EMBEDDINGS = np.squeeze(TRAIN_SBERT_USER_EMBEDDINGS)
+    TRAIN_IRONY_USER_EMBEDDINGS = np.squeeze(TRAIN_IRONY_USER_EMBEDDINGS)
+    TRAIN_EMOTION_USER_EMBEDDINGS = np.squeeze(TRAIN_EMOTION_USER_EMBEDDINGS)
+    TRAIN_PERSONALITY_USER_EMBEDDINGS = np.squeeze(TRAIN_PERSONALITY_USER_EMBEDDINGS)
+
+    VAL_SBERT_USER_EMBEDDINGS = np.squeeze(VAL_SBERT_USER_EMBEDDINGS)
+    VAL_IRONY_USER_EMBEDDINGS = np.squeeze(VAL_IRONY_USER_EMBEDDINGS)
+    VAL_EMOTION_USER_EMBEDDINGS = np.squeeze(VAL_EMOTION_USER_EMBEDDINGS)
+    VAL_PERSONALITY_USER_EMBEDDINGS = np.squeeze(VAL_PERSONALITY_USER_EMBEDDINGS)
+
+    TRAIN_SBERT_USER_EMBEDDINGS = np.squeeze(TRAIN_SBERT_USER_EMBEDDINGS)
+    TRAIN_IRONY_USER_EMBEDDINGS = np.squeeze(TRAIN_IRONY_USER_EMBEDDINGS)
+    TRAIN_EMOTION_USER_EMBEDDINGS = np.squeeze(TRAIN_EMOTION_USER_EMBEDDINGS)
+    TRAIN_PERSONALITY_USER_EMBEDDINGS = np.squeeze(TRAIN_PERSONALITY_USER_EMBEDDINGS)
+
 
     FEATURES = list(np.concatenate([SBERT_USER_EMBEDDINGS,
                                     IRONY_USER_EMBEDDINGS,
