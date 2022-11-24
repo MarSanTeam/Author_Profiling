@@ -10,20 +10,18 @@
 # ============================ Third Party libs ============================
 import os
 import random
-import pickle
 from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.metrics import f1_score
 import numpy as np
 from transformers import T5Tokenizer
 from sentence_transformers import SentenceTransformer
 import logging
 import itertools
-from sklearn.metrics import accuracy_score
 
 # ============================ My packages ============================
 from configuration import BaseConfig
 from data_loader import read_pickle, write_pickle
-from utils import create_sbert_user_embedding, create_user_embedding, cross_validator, \
-    calculate_confidence_interval
+from utils import create_sbert_user_embedding, create_user_embedding
 from indexer import Indexer
 from models.t5_personality import Classifier as PersonalityClassifier
 from models.t5_irony import Classifier as IronyClassifier
@@ -117,7 +115,7 @@ if __name__ == "__main__":
     if os.path.exists(CONFIG.personality_output_file_path):
         logging.debug("Load personality user embeddings")
         TRAIN_PERSONALITY_USER_EMBEDDINGS, VAL_PERSONALITY_USER_EMBEDDINGS, \
-            TEST_PERSONALITY_USER_EMBEDDINGS = read_pickle(CONFIG.personality_output_file_path)
+        TEST_PERSONALITY_USER_EMBEDDINGS = read_pickle(CONFIG.personality_output_file_path)
     else:
         logging.debug("Create personality user embeddings")
         PERSONALITY_MODEL = PersonalityClassifier.load_from_checkpoint(PERSONALITY_MODEL_PATH,
@@ -166,7 +164,7 @@ if __name__ == "__main__":
 
     if os.path.exists(CONFIG.emotion_output_file_path):
         logging.debug("Load emotion user embeddings")
-        TRAIN_EMOTION_USER_EMBEDDINGS, VAL_EMOTION_USER_EMBEDDINGS, TEST_EMOTION_USER_EMBEDDINGS\
+        TRAIN_EMOTION_USER_EMBEDDINGS, VAL_EMOTION_USER_EMBEDDINGS, TEST_EMOTION_USER_EMBEDDINGS \
             = read_pickle(CONFIG.emotion_output_file_path)
     else:
         logging.debug("Create emotion user embeddings")
@@ -200,29 +198,44 @@ if __name__ == "__main__":
     VAL_EMOTION_USER_EMBEDDINGS = np.squeeze(VAL_EMOTION_USER_EMBEDDINGS)
     VAL_PERSONALITY_USER_EMBEDDINGS = np.squeeze(VAL_PERSONALITY_USER_EMBEDDINGS)
 
-    TRAIN_SBERT_USER_EMBEDDINGS = np.squeeze(TRAIN_SBERT_USER_EMBEDDINGS)
-    TRAIN_IRONY_USER_EMBEDDINGS = np.squeeze(TRAIN_IRONY_USER_EMBEDDINGS)
-    TRAIN_EMOTION_USER_EMBEDDINGS = np.squeeze(TRAIN_EMOTION_USER_EMBEDDINGS)
-    TRAIN_PERSONALITY_USER_EMBEDDINGS = np.squeeze(TRAIN_PERSONALITY_USER_EMBEDDINGS)
+    TEST_SBERT_USER_EMBEDDINGS = np.squeeze(TEST_SBERT_USER_EMBEDDINGS)
+    TEST_IRONY_USER_EMBEDDINGS = np.squeeze(TEST_IRONY_USER_EMBEDDINGS)
+    TEST_EMOTION_USER_EMBEDDINGS = np.squeeze(TEST_EMOTION_USER_EMBEDDINGS)
+    TEST_PERSONALITY_USER_EMBEDDINGS = np.squeeze(TEST_PERSONALITY_USER_EMBEDDINGS)
 
+    TRAIN_FEATURES = list(np.concatenate([TRAIN_SBERT_USER_EMBEDDINGS,
+                                          TRAIN_IRONY_USER_EMBEDDINGS,
+                                          TRAIN_EMOTION_USER_EMBEDDINGS,
+                                          TRAIN_PERSONALITY_USER_EMBEDDINGS],
+                                         axis=1))
 
-    FEATURES = list(np.concatenate([SBERT_USER_EMBEDDINGS,
-                                    IRONY_USER_EMBEDDINGS,
-                                    EMOTION_USER_EMBEDDINGS,
-                                    PERSONALITY_USER_EMBEDDINGS],
-                                   axis=1))
-    c = list(zip(FEATURES, INDEXED_TARGET))
+    VAL_FEATURES = list(np.concatenate([VAL_SBERT_USER_EMBEDDINGS,
+                                        VAL_IRONY_USER_EMBEDDINGS,
+                                        VAL_EMOTION_USER_EMBEDDINGS,
+                                        VAL_PERSONALITY_USER_EMBEDDINGS],
+                                       axis=1))
+
+    TEST_FEATURES = list(np.concatenate([TEST_SBERT_USER_EMBEDDINGS,
+                                         TEST_IRONY_USER_EMBEDDINGS,
+                                         TEST_EMOTION_USER_EMBEDDINGS,
+                                         TEST_PERSONALITY_USER_EMBEDDINGS],
+                                        axis=1))
+
+    c = list(zip(TRAIN_FEATURES, TRAIN_INDEXED_TARGET))
     random.shuffle(c)
-    FEATURES, INDEXED_TARGET = zip(*c)
+    TRAIN_FEATURES, TRAIN_INDEXED_TARGET = zip(*c)
 
     CLF = GradientBoostingClassifier()
-    CLF.fit(FEATURES, INDEXED_TARGET)
+    CLF.fit(TRAIN_FEATURES, TRAIN_INDEXED_TARGET)
 
-    SCORES, CI = cross_validator(CLF, FEATURES, INDEXED_TARGET, cv=5)
-    logging.debug(
-        "%0.4f accuracy with a standard deviation of %0.4f" % (SCORES.mean(), SCORES.std()))
-    logging.debug("%0.4f ci with a standard deviation of %0.4f" % (CI.mean(), CI.std()))
-    SCORES, CI = cross_validator(CLF, FEATURES, INDEXED_TARGET, cv=10)
-    logging.debug(
-        "%0.4f accuracy with a standard deviation of %0.4f" % (SCORES.mean(), SCORES.std()))
-    logging.debug("%0.4f ci with a standard deviation of %0.4f" % (CI.mean(), CI.std()))
+    TRAIN_PREDICTED_TARGETS = CLF.predict(TRAIN_FEATURES)
+    VAL_PREDICTED_TARGETS = CLF.predict(VAL_FEATURES)
+    TEST_PREDICTED_TARGETS = CLF.predict(TEST_FEATURES)
+
+    TRAIN_F1SCORE_MACRO = f1_score(TRAIN_INDEXED_TARGET, TRAIN_PREDICTED_TARGETS, average="macro")
+    VAL_F1SCORE_MACRO = f1_score(VAL_INDEXED_TARGET, VAL_PREDICTED_TARGETS, average="macro")
+    TEST_F1SCORE_MACRO = f1_score(TEST_INDEXED_TARGET, TEST_PREDICTED_TARGETS, average="macro")
+
+    logging.debug(f"Train macro F1 score is : {TRAIN_F1SCORE_MACRO * 100:0.2f}")
+    logging.debug(f"Val macro F1 score is : {VAL_F1SCORE_MACRO * 100:0.2f}")
+    logging.debug(f"Test macro F1 score is : {TEST_F1SCORE_MACRO * 100:0.2f}")
