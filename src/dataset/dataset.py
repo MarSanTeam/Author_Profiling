@@ -8,7 +8,8 @@
 """
 
 # ============================ Third Party libs ============================
-from abc import ABC, abstractmethod
+from abc import ABC
+
 import pytorch_lightning as pl
 import torch
 
