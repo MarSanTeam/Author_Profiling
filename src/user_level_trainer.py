@@ -7,24 +7,25 @@
                 user_level_trainer.py
 """
 
+import itertools
+import logging
 # ============================ Third Party libs ============================
 import os
 import random
+
+import numpy as np
+from sentence_transformers import SentenceTransformer
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import f1_score
-import numpy as np
 from transformers import T5Tokenizer
-from sentence_transformers import SentenceTransformer
-import logging
-import itertools
 
 # ============================ My packages ============================
 from configuration import BaseConfig
 from data_loader import read_pickle, write_pickle
-from utils import create_sbert_user_embedding, create_user_embedding
 from indexer import Indexer
-from models.t5_personality import Classifier as PersonalityClassifier
 from models.t5_irony import Classifier as IronyClassifier
+from models.t5_personality import Classifier as PersonalityClassifier
+from utils import create_sbert_user_embedding, create_user_embedding
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -115,7 +116,7 @@ if __name__ == "__main__":
     if os.path.exists(CONFIG.personality_output_file_path):
         logging.debug("Load personality user embeddings")
         TRAIN_PERSONALITY_USER_EMBEDDINGS, VAL_PERSONALITY_USER_EMBEDDINGS, \
-        TEST_PERSONALITY_USER_EMBEDDINGS = read_pickle(CONFIG.personality_output_file_path)
+            TEST_PERSONALITY_USER_EMBEDDINGS = read_pickle(CONFIG.personality_output_file_path)
     else:
         logging.debug("Create personality user embeddings")
         PERSONALITY_MODEL = PersonalityClassifier.load_from_checkpoint(PERSONALITY_MODEL_PATH,
