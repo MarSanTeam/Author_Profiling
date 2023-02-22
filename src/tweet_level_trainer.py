@@ -7,22 +7,23 @@
             tweet_level_trainer.py
 """
 
+import logging
 # ============================ Third Party libs ============================
 import os
-import logging
+
 import numpy as np
 import pytorch_lightning as pl
-from pytorch_lightning.loggers import CSVLogger
-from transformers import T5Tokenizer
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
+from pytorch_lightning.loggers import CSVLogger
 from sklearn.utils import class_weight
+from transformers import T5Tokenizer
 
 # ============================ My packages ============================
 from configuration import BaseConfig
 from data_loader import read_csv
-from indexer import Indexer
 from dataset import DataModule
+from indexer import Indexer
 from models.t5_irony import Classifier
 
 logging.basicConfig(level=logging.DEBUG)
