@@ -7,10 +7,11 @@
             inferencer.py
 """
 
+import logging
 # ============================ Third Party libs ============================
 import os
-import logging
 import pickle
+
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from transformers import T5Tokenizer
@@ -18,9 +19,9 @@ from transformers import T5Tokenizer
 # ============================ My packages ============================
 from configuration import BaseConfig
 from data_prepration import prepare_ap_data
-from utils import create_sbert_user_embedding, save_output, create_user_embedding
-from models.t5_personality import Classifier as PersonalityClassifier
 from models.t5_irony import Classifier as IronyClassifier
+from models.t5_personality import Classifier as PersonalityClassifier
+from utils import create_sbert_user_embedding, save_output, create_user_embedding
 
 logging.basicConfig(level=logging.DEBUG)
 
