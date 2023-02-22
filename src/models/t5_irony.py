@@ -7,11 +7,11 @@
                 t5_irony.py
 """
 
+import pytorch_lightning as pl
 # ============================ Third Party libs ============================
 import torch
-from torch import nn
-import pytorch_lightning as pl
 import torchmetrics
+from torch import nn
 from transformers import T5EncoderModel
 
 
