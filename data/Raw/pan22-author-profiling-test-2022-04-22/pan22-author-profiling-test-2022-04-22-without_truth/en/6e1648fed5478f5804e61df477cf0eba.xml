@@ -1,0 +1,662 @@
+<author lang="en">
+	<documents>
+		<document><![CDATA[#USER# Go to the record fairs that still exist. Get the old stuff]]></document>
+		<document><![CDATA[#USER# #USER# #USER# That's why all this criticism is probably counterproductive in reality.]]></document>
+		<document><![CDATA[#USER# Our barrister is just as angry as we are. They are also looking at this, but we've been trying to resolve this for years, and have just reached the "if we don't hear from you by X then court proceedings will follow" or similar wording.]]></document>
+		<document><![CDATA[And yet... nobody will ever look at it. 
+
+So maybe it really doesn't matter. It wasn't my best work, and I'm only doing it to try to get myself back into doing a bit of coding for fun.
+
+But I'm really annoyed at myself.
+
+And git.
+
+Git sucks.]]></document>
+		<document><![CDATA[Row, column and cell level permissions for Athena. That's got some fascinating applications.
+
+#URL#]]></document>
+		<document><![CDATA[I'm loving watching all the #HASHTAG# "fans" who hated that ending.
+
+I don't. I'm glad it finished as a race.]]></document>
+		<document><![CDATA[Yay! Let's make sure we can re:Invent... Increasing the #HASHTAG#
+
+#HASHTAG# #HASHTAG#
+
+Cc #USER# #URL#]]></document>
+		<document><![CDATA[#USER# There is MyAsus. I can switch it off. But it switches itself on again automatically. I can't find a way to turn it off permanently. That's the problem.]]></document>
+		<document><![CDATA[#USER# #USER# Trust me, I'd love to network this house up. It's an absolute PITA for wifi connections.]]></document>
+		<document><![CDATA["[speed] cameras placed to generate maximum revenue" - well... usually they'd be placed where people speed! #HASHTAG# #URL#]]></document>
+		<document><![CDATA[Live Sport. You've got to love it. Nothing you say matters. If you like it or hate it, it happened. That was bizarre and brilliant. #HASHTAG# #HASHTAG#]]></document>
+		<document><![CDATA[Companies with these services should be worried at re:Invent after day 1:
+
+* security vulnerability scanning services
+* analytics services
+* monitoring and observability services
+
+That's what I see in the massive number of initial announcements anyway.
+
+#URL#]]></document>
+		<document><![CDATA[Events are also data.
+
+When you start to see that events are part of this conversation, and that they are simply very short lived data that you use in a very specific way, this starts to make a bit more sense]]></document>
+		<document><![CDATA[Today someone gave me one of the biggest compliments I've ever had in my career. 
+
+It was lovely to hear and I'm trying very hard to accept it.
+
+The people I'm working with at the moment are fantastic and setting me big challenges.]]></document>
+		<document><![CDATA[#USER# #USER# But... of course... I am the *best* sysadmin/programmer in the world! Nothing *I* build will *ever* get hacked, or fall over, or suffer a DDoS attack, and will be constantly updated with superb failover.
+
+(for the benefit of others, this is a huge amount of #HASHTAG#)]]></document>
+		<document><![CDATA[#USER# #USER# #USER# #USER# First point: I saw that as a joke and saw no disrespect. Corey apologised.
+
+Second point: is that not a justified criticism about the Heroes programme? The guy wrote a book (without Amazon support) and helps people in the community and has a job at a company that isn't Amazon.]]></document>
+		<document><![CDATA[#USER# iframes are an antipattern. Imagine the front end being all the events you're going to get and the back end being how you create all the content.
+
+It's a fun challenge when you think about it.]]></document>
+		<document><![CDATA[So if I have 7 people in my family, does that mean I have to leave 1 at home if I want to go to the park now? #HASHTAG# #HASHTAG#]]></document>
+		<document><![CDATA[While I agree with this, I also think that people need to learn what is and is not important data. 
+
+Data storage has implications. One of those implications is that data has "gravity". The more data you have the more it attracts *and* harder it is to relocate/replicate. #URL#]]></document>
+		<document><![CDATA[#USER# But if they knew what they were doing, they should be multi-region anyway, so it shouldn't be down unless it's one of the important services that is across regions...
+
+AWS ISN'T DOWN.]]></document>
+		<document><![CDATA[Who is fixing the AI for this? Who would know?
+
+This feels like the kind of thing #USER# would know about. #URL#]]></document>
+		<document><![CDATA[#USER# #USER# #USER# #USER# So which areas, on average, are "poor" and which areas, on average, are "rich"?
+
+#HASHTAG#]]></document>
+		<document><![CDATA[I have an ASUS Zenbook recently purchased (one of the higher end ones), and everything is great about it...
+
+Except the mic stops working on calls. I've replaced it with a new one because I need the mic to work.
+
+New one does it too, but less often.
+
+Anyone else have this issue?]]></document>
+		<document><![CDATA[#USER# #USER# They're the two I have in my head.
+
+Have played with both.
+
+I keep thinking I'll find them in my password management tool, but both use GitHub for login, so they're not there. Have rectified that with a private note in my password management tool with searchable content.]]></document>
+		<document><![CDATA[#USER# #USER# #USER# #USER# #USER# This is the biggest problem. I'm not sure how it gets resolved though without a bit of a change in PR.]]></document>
+		<document><![CDATA[#USER# Keep doing these pictures. I like seeing the world from my bed.]]></document>
+		<document><![CDATA[A ringing endorsement for a future PM if every I heard one #HASHTAG# #URL#]]></document>
+		<document><![CDATA[#USER# Simple.
+
+Take your data and transform it into the next stage.
+
+That's the whole point.
+
+Stop thinking about "querying" something static and start thinking about interrogating something dynamic.]]></document>
+		<document><![CDATA[Yes, of course, you're going to have to walk the user through the UI and there won't be the same interactivity, but the *key* is that you are going to have moments where you send and receive data that may have a process behind it.
+
+Orchestrator Lambda functions?]]></document>
+		<document><![CDATA[The problem is that we've spent decades building applications around SQL as *the* data access solution and not around teaching different data access patterns.
+
+It sucks.]]></document>
+		<document><![CDATA[#USER# #USER# I am in the glorious (#HASHTAG#) situation of having probably fewer options for support than you and no work from about 3 weeks time.]]></document>
+		<document><![CDATA[#USER# Oh I'm not saying this is easy to do. 
+
+The more I look though, the less the industry cares about this.
+
+We're still teaching people RDBMS as default and everything else is "just for fun or high scale".
+
+Code is still king.
+
+It shouldn't be.]]></document>
+		<document><![CDATA[#USER# #USER# I'm in a victorian terraced house on wifi and it's connecting to the point in the room downstairs, and the walls have internal wall insulation (think tin foil + thick insulation). Wifi either going through the wooden and carpeted floor, or out the window, off the house opposite.]]></document>
+		<document><![CDATA[#USER# #USER# #USER# #USER# #USER# #USER# Oh I forgot. All the worlds money problems are just going to disappear too with fusion powered crypto. Nation states will cease to exist, and we'll live in a utopian world of "freedom" where we're allowed to do whatever we want because libertarianism rocks! (#HASHTAG#) #HASHTAG#]]></document>
+		<document><![CDATA[11y/o wanted me to download davinci resolve.
+
+Just took 1 minute. #URL#]]></document>
+		<document><![CDATA[#USER# Still have *very fast internet* though. It's why I haven't worried about it. What I'm bothered about is that I thought it was wifi. Looks like I may have been wrong.]]></document>
+		<document><![CDATA[What? You mean... you mean... that software lives on beyond the deployment? Beyond the first few minutes/hours/days? Until you retire it? #HASHTAG#
+
+I think we need a new phrase:
+
+"Your code is for life, not just for deployment"
+
+cf "A dog is for life, not just for Christmas" #URL#]]></document>
+		<document><![CDATA[Doesn't appear to have a major effect on download/upload speeds (which is why I've never looked before) #URL#]]></document>
+		<document><![CDATA[People really don't understand what the cloud is do they.
+
+"It's just servers" is very early 2000s thinking.
+
+There is no way you could create an umbrella service now. It would be impossible to manage.
+
+Oh, sorry. There is. It's called kubernetes. #URL#]]></document>
+		<document><![CDATA[So... the EU is looking like they handled this whole coronavirus thing really well.
+
+So glad we're leaving #HASHTAG#]]></document>
+		<document><![CDATA[Fascinating thread for serverless on the front end #URL#]]></document>
+		<document><![CDATA[#USER# Ah. But Mercedes couldn't pit because of track position and Red Bull could.
+
+They played the hand they were dealt and Max beat Lewis on a 1 lap shootout with very fresh tyres.
+
+The releasing of the cars made it exciting and... who cares?]]></document>
+		<document><![CDATA[#USER# #USER# #USER# This...
+
+But analytics, observability and security startups took a kicking]]></document>
+		<document><![CDATA[#USER# Um... Tried logging into the regional console?]]></document>
+		<document><![CDATA[However getting a developer or architect to step away from the idea of a *centralised* data store or even a *centralised* data layer is very difficult.
+
+Even introducing a new database, the first thing they try is "how do I use this like a relational database?"]]></document>
+		<document><![CDATA[#USER# In that case AWS is down far far less than GCP and Azure are "down"]]></document>
+		<document><![CDATA[Athena has a feature that basically makes it very very useful indeed now.
+
+#URL#]]></document>
+		<document><![CDATA[Not alien tech.
+
+What a surprise! #HASHTAG#
+
+I'm genuinely bored of anything that comes up as "unexplained" being explained as "alien" on origin. 
+
+It's like the world can't be bothered with science and jumps to conclusions. #URL#]]></document>
+		<document><![CDATA[#USER# I mean... what happens when an oil well runs out? The companies are supposed to "do the right thing" and clean up aren't they? After all that polluting they should probably do something good... #HASHTAG#]]></document>
+		<document><![CDATA[#USER# #USER# Yeah. That's the solution I'm coming to. Or just design the system so it doesn't need it.]]></document>
+		<document><![CDATA[#USER# I've told the story before. Best interviewee I ever had:
+
+I had a technique of giving people an impossible challenge. It was only 5 minutes maybe in total, but the idea was to find out how quick they'd ask for help.
+
+Fastest person took about 1 minute to ask.
+
+Best ever hire.]]></document>
+		<document><![CDATA[Sitting in the MSFT HQ with an Apple laptop and a Google phone. #HASHTAG#]]></document>
+		<document><![CDATA[#USER# Strangely my speed is still up in the 100s of megabytes...
+
+Because I have a non-BT fibre line.]]></document>
+		<document><![CDATA[No! Really? That is a surprise! #HASHTAG#
+
+BBC Radio 4 broke accuracy rules in Nigel Lawson climate change interview
+
+#URL#]]></document>
+		<document><![CDATA[That's basically an admission that pubs, restaurants and licensed cafes are venues that speed up the spread of covid.
+
+What a massive surprise #HASHTAG# 
+
+Keeping the schools *open* is a good idea.
+
+I *totally* get that people's livelihoods are impacted, and that's not good. #URL#]]></document>
+		<document><![CDATA[#USER# Oh! It's the best thing ever! I can never disagree! I will definitely put all my savings into it forever! It's the future of the world economy! 
+
+#HASHTAG#]]></document>
+		<document><![CDATA[So... the Spanish variant that was brought back to the UK is the dominant version spreading around now.
+
+How did that get here? #HASHTAG# #URL#]]></document>
+		<document><![CDATA[Dear #USER# 
+
+I've just cancelled a motor policy with you and been told to make a payment in "My Account"...
+
+Except because it's cancelled "My Account" no longer has a payment button because the policy has been cancelled.
+
+Really helpful #HASHTAG#]]></document>
+		<document><![CDATA[#USER# Sort of. The design of the system has to be such that either the calls are already built so that they do exactly what you expect each time (just like a JSON API), or if it's a workflow of some sort, that you walk the user through the flow. 
+
+Either way, it's an unusual experience]]></document>
+		<document><![CDATA[If you're an ML image person with a bit of spare time, are you interested in helping Jenny out with this? Could be interesting. #URL#]]></document>
+		<document><![CDATA[#USER# #USER# #USER# Agreeing with the above. My wife and I have never really done the "dinner" thing for dates. We prefer walks, coffee, dog walking (when we had dogs)... I can't imagine that people now want an 80s version of "dating".]]></document>
+		<document><![CDATA[I'm sure there are ways of doing this properly, but I can't remember how to do them.]]></document>
+		<document><![CDATA[Lightweight data stores can easily be replicated.
+
+You also don't need everything to be responding at 4ms all the time. Sometimes you just need to run something 4 times a day. It doesn't really matter how long that takes as long as it doesn't time out.]]></document>
+		<document><![CDATA[#USER# I could rewrite it but I don't need to as I got the stars so i must have done the work.]]></document>
+		<document><![CDATA[#USER# Cannot uninstall myasus as far as I can tell]]></document>
+		<document><![CDATA[#USER# Depending on what you believe, that's available most Sundays]]></document>
+		<document><![CDATA[#USER# I learned this *very* fast. I have reached the point where for developers it is "do you have basic levels of coding?" and "do you ask for help when under stress?"
+
+It makes interviews easy.
+
+They are under stress (unfortunately - not intended), so see how they cope.]]></document>
+		<document><![CDATA[#USER# #USER# #USER# #USER# Become a partner?
+
+Damn hard to do as an individual.
+
+Consultant? Certifications don't work because it's all EC2.
+
+The Heroes programme is a way to give visibility to community experts.
+
+What do the Heroes get?
+
+In reality, a nice addition to their LinkedIn and early access.]]></document>
+		<document><![CDATA[I think we need more non-Americans to do AI on noise cancellation and voice identification for video calling services.
+
+Remote on a meeting, and I can hear those with South of England accents (most mid-atlantic sounding) really clearly.
+
+Northern England/other? *mumbles*]]></document>
+		<document><![CDATA[Chime being down it's consequential because... AWS loses the ability to communicate internally.
+
+Or at least, the *back channels* that *shouldn't exist* are kicking in.
+
+One of the two. #URL#]]></document>
+		<document><![CDATA[Why is Accelerate first? Because if you don't try to understand serverless from the context of improving your organisation and the speed and quality of how it works and delivers, then going serverless is just as pointless as any other decision.]]></document>
+		<document><![CDATA[#USER# #USER# #USER# #USER# The Heroes programme is something i can't be part of as ex AWS (I think) so what value is there in me telling people to go serverless?
+
+I'm one of the most experienced serverless experts in the world (not hyperbole - I've met most of the others) and... 🤷‍♂️]]></document>
+		<document><![CDATA[#USER# I've watched the entire season. It's been like that a large part of the season. 
+
+It's been a brilliant and crazy season.]]></document>
+		<document><![CDATA[Let’s create a cryptocurrency based on “Proof of Ethics” #HASHTAG# #HASHTAG#]]></document>
+		<document><![CDATA[I reckon someone at #USER# should be able to work on/fix this]]></document>
+		<document><![CDATA[#USER# #USER# #USER# #USER# I've worked at AWS (for just under a year) and had to deal with the kubernetes crowd telling me what was and wasn't serverless. It's not easy navigating Twitter for AWS.
+
+AWS internally can have groups with very strong views that rarely reach the public because of the PR rules.]]></document>
+		<document><![CDATA[#USER# #USER# I'm sorry but did you have to explain something that doesn't quite come across properly to someone else? #HASHTAG#]]></document>
+		<document><![CDATA[They'll have spent the last few hours being the people who you went to to figure out what to do about how the AWS issues were affecting your business. 
+
+Those people. #URL#]]></document>
+		<document><![CDATA[#USER# #USER# Very much tongue in cheek. 
+
+Hoping that everything is getting sorted. 
+
+Sounds like a bad one.]]></document>
+		<document><![CDATA[#USER# #USER# I completely understood the point about not *wanting* to wear one (uncomfortable etc). 
+
+The problem is that the *way* it was put across was... a little clumsy?
+
+It does *seem* to support the "wearing a mask leads to increase in CO2 intake", which just isn't true.]]></document>
+		<document><![CDATA[#USER# #USER# #USER# This is the way.
+
+Deployment time and MTTR.
+
+This is the serverless way. #URL#]]></document>
+		<document><![CDATA[#USER# Part of the point of the above ideas are they are much easier to extend and work with.
+
+Schemas don't get stuck in "well we can't change it now".
+
+That's the point here.
+
+You can always create new datasets.]]></document>
+		<document><![CDATA[#USER# No. Your service (your responsibility) is down.
+
+That's what the users see.
+
+Architect it better.]]></document>
+		<document><![CDATA[#USER# #USER# #USER# #USER# *You* are not Amazon.
+
+If you take an attack on "Amazon" personally, then there is something wrong here.
+
+If you feel it's unjustified, then say so, but a feeling or a reaction is not necessarily the fault of the creator here.
+
+Amazon is often misunderstood. It can also be wrong.]]></document>
+		<document><![CDATA[#USER# I just completed Day 3, got the stars, and then managed to delete the code before pushing it to github.
+
+I am a genius.]]></document>
+		<document><![CDATA[us-east-1 has issues
+
+Americans start saying "AWS has gone down"
+
+Europeans: works ok for me]]></document>
+		<document><![CDATA[An NGO in China that... uses a flame thrower and "burns wasps nests out of trees".
+
+I definitely cannot see another use for that #HASHTAG# #URL#]]></document>
+		<document><![CDATA[All data is relational.
+
+The next person that tells me that they use a relational database because data is relational, I am going to scream at them.
+
+The point isn't they data is of a type.
+
+It's that the way you store data affects both speed of deployment and MTTR.]]></document>
+		<document><![CDATA[Listening to a woman loudly complain about someone (not present) talking behind her back about her. We're in a Dr's waiting room. #HASHTAG#]]></document>
+		<document><![CDATA[I get really frustrated when an architect drops a relational database into a new application now.
+
+It's not their fault. 
+
+But I feel like the industry has failed.
+
+Managing data properly leads to better and fewer lines of code and maintainable applications.
+
+That's it.]]></document>
+		<document><![CDATA[Um... Oh dear. Sounds like both negligence and Govt underfunding of NHS is to blame... So let's give the Tories a huge majority? #HASHTAG# #URL#]]></document>
+		<document><![CDATA[Just realised that the actual date of #HASHTAG# 29th March 2019 will be my 42nd birthday. #HASHTAG# #HASHTAG# #HASHTAG#]]></document>
+		<document><![CDATA[#USER# We can always blame him. Didn't he announce his retirement? Distracted the squad obviously #HASHTAG#]]></document>
+		<document><![CDATA[Er... it's clearly the fault of renewables here. I mean, totally obviously the fault of renewables... what else could it be with other states obviously having no renewables at all, and experiencing... really cold weather too?
+
+Huge amounts of oil in Texas, right? #HASHTAG# #URL#]]></document>
+		<document><![CDATA[Exhibit 468736 (#HASHTAG#) for "how British democracy has been hacked"
+
+A Civil Servant being something other than Honest and Objective and therefore breaking the Civil Service Code.
+
+Giving up isn't an option is it.
+
+I want my country back. The one I was proud of. #URL#]]></document>
+		<document><![CDATA[#USER# No English Wikipedia entry.
+
+Therefore he doesn't exist.
+
+#HASHTAG#]]></document>
+		<document><![CDATA[OMG...
+
+I'm *right
+
+I can't believe that typo]]></document>
+		<document><![CDATA[#USER# A query is, in effect, simply a dataset you create on the fly.
+
+Why not generate the dataset ahead of time if you know you're going to need it?
+
+Kind of stands to reason.]]></document>
+		<document><![CDATA[#USER# Had thought of that but part of the reason is a need is because we need to support all sorts of older browsers. 😫]]></document>
+		<document><![CDATA[#USER# Yes, but I can't use cloudflare. I'm on AWS. 😒]]></document>
+		<document><![CDATA[Lambda/API Gateway/Serverless people:
+
+How would you create a generalised serverless (read: event driven) web based solution that provides server side HTML, and doesn't use javascript?
+
+Most event driven systems require push or pull and this is js in web. So... no js... How?]]></document>
+		<document><![CDATA[Two of my children were up until well past 2am last night. 
+
+These are not toddlers. They are 10 &amp; 11 y/o kids with anxiety, which in my opinion has been hugely exacerbated by the covid pandemic.
+
+I need to work, look after family/wife and get more sleep... with a big headache.]]></document>
+		<document><![CDATA[#USER# #USER# #USER# #USER# My point is simply this:
+
+I reckon there are a lot of people internally at AWS who are frustrated with Corey.
+
+But I think the frustration and anger is misdirected.
+
+Corey is basically saying what many of us think, but with humour and trying to avoid individual attacks.]]></document>
+		<document><![CDATA[The problem is the idea I a centralised data layer.
+
+Moving to decentralised data is the key.
+
+Note: this is *not* a blockchain/crypto/web3 (vomit) stan thread. 
+
+The point is...]]></document>
+		<document><![CDATA[Mercedes must be more scared of Verstappen being *very* wide if in front, rather than of being on fresher tyres and behind. #HASHTAG#]]></document>
+		<document><![CDATA[Looking forward to this. I think it'll be Lewis but if Max wins he will have deserved it. They're both brilliant. #HASHTAG#]]></document>
+		<document><![CDATA[Lewis Hamilton is more classy then most of his fans on Twitter #HASHTAG# #HASHTAG#]]></document>
+		<document><![CDATA[#USER# Oooh... #HASHTAG# last week and Starbucks this week? #HASHTAG# #HASHTAG# #HASHTAG#]]></document>
+		<document><![CDATA[#USER# No. That's the point. The technology choice affects deployment speed and MTTR. Those are the most important things.]]></document>
+		<document><![CDATA[#USER# #USER# Problem is there is no mic jack. It's literally all USB C and one USB-A]]></document>
+		<document><![CDATA[Boris Johnson takes private jet to avoid drive from Doncaster to Teesside #URL# via #USER# &lt;&lt; WHAT A MASSIVE CLIMATE ACTIVIST THIS PRIME MINISTER IS #HASHTAG#]]></document>
+		<document><![CDATA[The point is moving to a mindset where you:
+
+* store data only when you need to
+* store it in a "read" ready format
+* delete data (regulations allowing) you don't need as soon as possible
+* keep your data stores as lightweight and performant as possible]]></document>
+		<document><![CDATA[#USER# This is not my favourite article. Too much scaremongering. I get why it does that though, but it's not particularly helpful in a lot of ways.]]></document>
+		<document><![CDATA[#USER# Currently she's sitting next to me practicing "the train"
+
+Me? I'm totally getting work done #HASHTAG#]]></document>
+		<document><![CDATA[#USER# If I was going to allow some js, I'd allow webhooks and use pub/sub messaging in some form.]]></document>
+		<document><![CDATA[Can't see anything going wrong with this kind of thinking. No, nothing at all.
+
+In the history of the world, "not asking the experts" is often the best strategy I've found. 
+
+#HASHTAG#
+
+Let's just think about this for a bit shall we? #URL#]]></document>
+		<document><![CDATA[GBP is falling a little against EUR and USD...
+Happened about 30 minutes ago.
+Wonder what's giving the currency markets the jitters? #HASHTAG#]]></document>
+		<document><![CDATA[It's always DNS... scratch that...
+
+It's always us-east-1 #URL#]]></document>
+		<document><![CDATA[But the idea is simple and he is correct in that posting threads is ridiculously hard on Twitter]]></document>
+		<document><![CDATA[This org has been spending money trying to get a resolution, and has effectively been ignored, and now finds that all the money it has spent may have been wasted, because it now needs to determine what claim it can raise against the new Luxembourgh company that owns the liability]]></document>
+		<document><![CDATA[Is everyone else thinking AWS CloudWatch RUM will lead to...
+
+#URL# #URL#]]></document>
+		<document><![CDATA[#USER# Need to find some single 30-something men vomiting in a corner too... then you'll be ready]]></document>
+		<document><![CDATA[#USER# I know why. Because it's not that easy. And the fact is that there are some basic mistakes almost everybody makes.]]></document>
+		<document><![CDATA["If things don’t change, by the end of the next decade, new oil and gas fields in the US will produce more than twice what Saudi Arabia produces today"
+
+USA! USA! USA! #HASHTAG# #HASHTAG# #URL#]]></document>
+		<document><![CDATA[Have you noticed how people who advocate for blockchain can't seem to change their opinion?
+#HASHTAG#]]></document>
+		<document><![CDATA[#USER# Haven't you heard? Apparently Durham properties owned by your parents are allowed with day trips 30 miles away #HASHTAG# #HASHTAG# #HASHTAG#]]></document>
+		<document><![CDATA[#USER# Nobody knows where the centre of gravity is on the monitor. You could have a massive heavy thing in the base at the front. Why not?]]></document>
+		<document><![CDATA[So glad a black clergyman pointed out white supremacy in the UK.
+
+It gives training algorithms very clear indications which accounts should be used to identify radicalisation. 
+
+And the right trying to get someone sacked when they say something they think is controversial? #HASHTAG#]]></document>
+		<document><![CDATA[#USER# #USER# #USER# Problem is that it's multiple announcements over multiple services over multiple days. You can see it in the tweets above. 
+
+Lambda was the big announcement. Like EC2 was (but very few really realised it).]]></document>
+		<document><![CDATA[#USER# Not for that computer. That one is straight into the router.
+
+I've never looked before because *massively fast connection* but I'm now wondering if this is the cause of all the mini "why is the internet not working?" problems]]></document>
+		<document><![CDATA[#USER# I disagree. It wasn't won or lost  just today. Max has had some bad luck this year too.]]></document>
+		<document><![CDATA[This simple statement is why I seriously dislike relational databases.
+
+They are a centralising black hole for data.
+
+After a certain point there becomes a data "event horizon" beyond which is virtually impossible to move away from that data storage and management pattern.]]></document>
+		<document><![CDATA[#USER# I do feel a little sorry for how close the announcement came to the start though. There's not a lot anyone could do. It'll be "wear masks and distance please" and many people won't. #URL#]]></document>
+		<document><![CDATA[#USER# #USER# Thank you! I genuinely can't remember these two when I need to.]]></document>
+		<document><![CDATA[#USER# Page reload is doable I suppose because that's an html construct. Hmm... that allows some form of polling for an event to return without the use of javascript.
+
+Interesting.]]></document>
+		<document><![CDATA[#USER# I'm more bothered about the underhand legal shenanigans. This should not be happening.]]></document>
+		<document><![CDATA[An org I know is trying (for 4 years) to resolve a breach of contract (a supplier with insurance went bust and didn't complete work properly) with their "insurance company". The solicitors representing the insurers failed to tell us that they are moving to Europe.]]></document>
+		<document><![CDATA[#USER# Worst? Literally told us to "let him figure it out without help" for about 10 minutes.]]></document>
+		<document><![CDATA[I feel like #USER#, myself, #USER#, #USER# and others have been saying a variation of this for about 4 years.
+
+At some point it'll sink in. #URL#]]></document>
+		<document><![CDATA[My favourite bit is how they have an endorsement from an Eastern European Oil and Gas company on how Oracle cloud helped save energy consumption...
+
+Yaaaay #HASHTAG# #URL#]]></document>
+		<document><![CDATA[#USER# You mean with the briliance of tunes like Ebeneezer Goode? #HASHTAG# #URL#]]></document>
+		<document><![CDATA[#USER# But the milk 🥛 it has been FREED FROM THE COW 🐄
+
+It is LIBERATED MILK!
+
+FREEDOM FOR ALL MILK!
+
+Let us walk around and declare how free the milk is.
+
+#HASHTAG#]]></document>
+		<document><![CDATA[#USER# Oooh. I've been messing up on Day 3. Trying to do it "right" and getting it wrong. I could hack it, but I want to challenge myself to do it better than normally. Ugh]]></document>
+		<document><![CDATA[#USER# It's fine. I'm not that bothered. The code wasn't very good.]]></document>
+		<document><![CDATA[#USER# #USER# #USER# I think there are about 10 people in the world who really understand what is and is not serverless.
+
+You, me and I'm keeping quiet now.]]></document>
+		<document><![CDATA[#USER# #USER# #USER# You wait until I release my infrastructure tool that will only allow you to code in assembly language. That's what "real coders" use #HASHTAG#
+
+The point is simple. It's all a form of code. It's just some is of a different form. YAML works just fine]]></document>
+		<document><![CDATA[#USER# Think of it like Amplify.
+
+It looks like you're simplifying.
+
+But you're actually hiding complexity.
+
+If you don't understand what it is you're doing then the problem isn't the "look, isn't this cool?" it's the "our dev pipeline is really slow and we don't know why".]]></document>
+		<document><![CDATA[Let's keep those environmental protections when we #HASHTAG# because we're doing such a good job #HASHTAG#
+
+UK has biggest fossil fuel subsidies in the EU, finds commission
+
+#URL#]]></document>
+		<document><![CDATA[#USER# I'm interested they dropped in the "support services" will be going multi region at the end of the doc.
+
+Sounds sensible. 🤯]]></document>
+		<document><![CDATA[Still in Whamageddon... I plan to still be in in January]]></document>
+		<document><![CDATA[#USER# #USER# #USER# And calling out the govt when it's just dumped a trade deal and jumping into another trade deal... without any real idea as to why...
+
+Why are we not having a referendum on this?
+
+Are we going to have everything blamed on Australians Singaporeans and Chileans next? #HASHTAG#]]></document>
+		<document><![CDATA[#USER# You haven't met enough UK tech workers. 😉
+
+#HASHTAG# #HASHTAG# #HASHTAG#]]></document>
+		<document><![CDATA[Dear internet
+
+Some AWS services are down
+
+AWS isn't down because many regions are still just fine. 
+
+Those services may be impacting other services in other regions.
+
+Stop saying "AWS is down".
+
+Start saying "service X is down in region Y" 
+
+I'm so bored of the wrong statements]]></document>
+		<document><![CDATA[#USER# #USER# #USER# #USER# *You* are not Amazon.
+
+I had to learn that *really fast*.
+
+If people attacked "me" then I had to learn to ignore it.
+
+If people attacked Lambda or API Gateway, I could provide support or point to docs.
+
+I could disagree with analysts but not with their delivery.]]></document>
+		<document><![CDATA[#USER# How come your cat is classified as swine? 
+
+Feline would have been more plausible. 
+
+I call canine testicles on this office shenanigans.]]></document>
+		<document><![CDATA[Who'd a thunk it? Brits starting up PR companies in a pandemic? #HASHTAG# #URL#]]></document>
+		<document><![CDATA[No? Really? What a surprise #HASHTAG#
+
+Founders of plastic waste alliance ‘investing billions in new plants’
+
+#URL#]]></document>
+		<document><![CDATA[#USER# #USER# Precisely. The whole thing is "I don't understand how to use AWS"]]></document>
+		<document><![CDATA[That was brilliant and I don't know if it was right or wrong but congratulations Max Verstappen. Brilliant finish. Bizarre but brilliant. #HASHTAG#]]></document>
+		<document><![CDATA[#USER# I think everyone is waiting for the "big bang" announcement.
+
+Problem is that lots of people are missing the addition of "serverless" and "on demand" to a whole host of services over the last few years. 
+
+Put it together, alongside event/flow driven architecture and...]]></document>
+		<document><![CDATA[I have never been more aware of the need to explain the background thinking to *why* serverless than in the role I'm in right now.
+
+It's extremely challenging but... hopefully there will be a hugely positive outcome.]]></document>
+		<document><![CDATA[#USER# It's not "serverless" (AWS overuses the word) but it's very much easier to manage and that's useful.]]></document>
+		<document><![CDATA[The org spent money on barristers, letters (ignored), trying to organise mediation (ignored), basically everything to find a resolution, including finding the money to have the works completed to ensure there was a final amount (this is over 6 figures).]]></document>
+		<document><![CDATA[#USER# #USER# #USER# You haven't seen a SoftBank slide deck recently have you?]]></document>
+		<document><![CDATA[#USER# 1) please give us this data
+2) person provides data
+3) ... please wait ...
+4) we'll get back to you
+
+If a process takes more than a lambda processing time to return, how would you resolve the flow?]]></document>
+		<document><![CDATA[#USER# #USER# We'll stand outside and clap but won't put up with temporary discomfort for the *huge* privilege of doing something that most frontline healthcare workers never do.]]></document>
+		<document><![CDATA[It's *not* their ability to speak clearly. They are definitely speaking clearly, and their voices are definitely loud enough. They are pronouncing the consonants (I can hear they are) but the audio seems to be losing aspects of the audio to make the sound messier.]]></document>
+		<document><![CDATA[#USER# #USER# Wow. Let me bow to your greater knowledge #HASHTAG#. I didn't ask if you understood scaling!
+
+You clearly don't fully understand serverless. You sort of understand FaaS to a point.]]></document>
+		<document><![CDATA[What should I be advising this company to do?
+
+Who do I go to to complain and/or can we get any compensation/sue the solicitors or insurance company?
+
+I am so cross.
+
+Yes I may have some interest in this org, because grrr I'm really angry.]]></document>
+		<document><![CDATA[I've found that taking in #HASHTAG# via the AWS "What's New?" page is strikingly easy and much less effort.
+
+#URL#]]></document>
+		<document><![CDATA[I looked at this at exactly the right moment (see screenshot for what I mean) #HASHTAG# 
+
+This is madness #URL# #URL#]]></document>
+		<document><![CDATA[I have just deleted some code I was working on just for fun by complete accident.
+
+It makes no difference that it has been deleted.
+
+It was for Advent of Code, and I had completed the challenges and got the stars for it.
+
+I'm just really annoyed at having *deleted the code*.]]></document>
+		<document><![CDATA[#USER# For me that's Twitter in many ways. At least, a few small DM groups and friends.]]></document>
+		<document><![CDATA[#USER# #USER# #USER# I was expecting this to be a reinvent of data moving to event driven models in some form.
+
+What's happening is lots of event and data services are becoming "serverless" and a lot of services are having their IAM permissions models improved and hardened.
+
+It's revolutionary.]]></document>
+		<document><![CDATA[#USER# I think this is more the conclusion I'm coming to:
+
+#URL#
+
+Basically, you can't.]]></document>
+		<document><![CDATA[#USER# EC2 *and* DynamoDB basically makes compute and data storage unavailable across many many services.
+
+Which means... nothing is going to work.
+
+If it's a networking problem (appears to be the suggestion) there's not a lot anyone can do. 
+
+#HASHTAG# is about it.]]></document>
+		<document><![CDATA[What's the name of the company that runs machine learning workloads at wind farms #USER# on used DC machines?
+
+I'm trying to find it.]]></document>
+		<document><![CDATA[#USER# Oh I don't know... it's not completely serverless but this is interesting.
+
+#URL#]]></document>
+		<document><![CDATA[No. Really? #HASHTAG# 
+
+That's almost certainly because all those spreading misinformation were so angry the Misinformation Spreader In Chief was banned that they left.
+
+It's almost like that's a good way to combat misinformation. #URL#]]></document>
+		<document><![CDATA[#USER# #USER# #USER# #USER# The problem is that those internal groups have built the frustration with no outlet and then when Werner goes off, it feels like everyone can.
+
+It's a bad look, looks like bullying, and makes AWS look like it has a "we hate Corey" problem.
+
+The community? It enjoys his content.]]></document>
+		<document><![CDATA[#USER# #USER# #USER# Blogging can be helpful long term much more than other mediums.
+
+See this tweet for example.
+
+#URL#]]></document>
+		<document><![CDATA[Moving the insurance company to Europe means that the issues and liabilities have been moved to the European company.
+
+The org now needs to make a claim against the European org.
+
+Question is, how long did the insurance co. solicitor know they were doing this?]]></document>
+		<document><![CDATA[To be clear, yes I do know how to check for upgrades, read the ASUS website, the Intel website, the Microsoft Windows website and check for support.
+
+I'm not here for that. I'm trying to find out if anybody else is experiencing similar.
+
+e.g. on reddit #URL#]]></document>
+		<document><![CDATA[I genuinely don't understand why any developer would put code into an immutable stack that has actual *money* behind it.
+
+An attacker stole $30m by being better at QA than the original team and exploiting it. They had time to do it is well.
+
+It's unethical. Not a crime though. #URL#]]></document>
+		<document><![CDATA[Cue the "BUT THIS ISN'T WHAT THE BREXIT MASSES VOTED FOR AND WE WANT OUR SUMMER HOLIDAYS IN THE COST BRAVA" crowd
+
+First they want Brexit, now they want "Rebellion"
+
+It's like they're trying to control the government agenda #HASHTAG# #URL#]]></document>
+		<document><![CDATA[I'm, at present, trying to explain the concepts around using the right type of data store for each part of a distributed/serverless application.
+
+This is doable because using managed services properly is part of serverless.]]></document>
+		<document><![CDATA[#USER# This is the pattern that bothers me with CDK, Amplify and others.
+
+The key to sustainability is not reducing LoC on its own, but reducing LoC whilst ensuring that your deployment will not get slower over time.]]></document>
+		<document><![CDATA[#USER# #USER# You mean... he's not a minor deity with the mind of a strategy genius? #HASHTAG# #URL#]]></document>
+		<document><![CDATA[#USER# The transmission is the problem because of who else gets it. Even a single dose would be good. I get that the kids won't get much benefit but the secondary benefits of lower disruption to education are *huge*.]]></document>
+		<document><![CDATA[#USER# Also, it's nothing to do with the microphone that I use, because it happens whether I'm using the microphone on the laptop, a microphone plugged in (has to be a USB mic because there is no audio jack (!) or a bluetooth mic. All have exactly the same issue.]]></document>
+		<document><![CDATA[On a wired connection (son's computer right next to the router) I get this... which makes even less sense.
+
+(vodafone.broadband is fibre router)
+
+1) I think I need a new network cable (!)
+2) I think #USER# / #USER# need to sort their fibre broadband network out in MK #URL# #URL#]]></document>
+		<document><![CDATA[#USER# "This is how we take over the world"
+"No! THIS is how we take over the world!"
+"You're both doing it wrong! THIS IS HOW WE TAKE OVER THE WORLD"]]></document>
+		<document><![CDATA[#USER# Hmm. Yes and no. 
+
+While NoSQL is often utilised in scale scenarios because RDBMS tend not to scale well, the point isn't "which tech do I choose?" but "how should I be modelling data in a system?"]]></document>
+		<document><![CDATA[#USER# I've no problem with paying you not having to think too hard.]]></document>
+		<document><![CDATA[Fascinating how AWS is moving customers onto newer hardware by emulating older hardware. Worth a read.
+
+Interesting question: what happens to the retired hardware? 
+
+Would be great to know how it is used, recycled, etc. 
+
+Paging #USER# and #USER# #URL#]]></document>
+		<document><![CDATA[Did an 'mtr -z 8.8.8.8' on my machine a few times yesterday and today. Consistently get results like this:
+
+I'm write in saying that my wifi is fine, but my broadband, while blindingly quick, is not as fast as it could be? #URL#]]></document>
+		<document><![CDATA[So apparently the NASDAQ opening bell is to be rung in Ireland in October... #URL# after the recent Apple stuff... #HASHTAG#]]></document>
+		<document><![CDATA[The "read" ready format is what matters most to me.
+
+That is what changed my view of data.
+
+Years spent trying to wrangle data in databases and... just push the exact data needed in the right format to S3 and... done.
+
+No query. No wait. No contest.]]></document>
+		<document><![CDATA[#USER# I'm wondering if that is the reason I'm getting strange slow downs on my video calls at the moment.]]></document>
+		<document><![CDATA[#USER# Did they put the money down, step back, other one pick the money up, step back, check, step forward, put the *cough* er product er down, step back, then walk away?
+
+I'm assuming social distancing was still enforced! #HASHTAG#]]></document>
+	</documents>
+</author>
